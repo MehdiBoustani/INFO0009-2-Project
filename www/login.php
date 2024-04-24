@@ -1,18 +1,15 @@
 <?php
 session_start();
 ?>
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Test de PHP : Login</title>
-    </head>
+    <?php include 'header.html'; ?>
+    <?php include 'navbar.html'; ?>
     <body>
         <?php
         //Retirer les variables de session si on s'est déconnectés
         if (isset($_POST['disconnect'])) {
             session_unset();
         }
-        $bdd = new PDO('mysql:host=localhost;dbname=group9', 'group9', 'tabodi');
+        $bdd = new PDO('mysql:host=db;dbname=group9;charset=utf8', 'group9', 'tabodi');
         if ($bdd == NULL)
             echo "Problème de connection";
         if (isset($_POST["login"])) {
@@ -28,6 +25,7 @@ session_start();
             if (isset($_POST['texte']))
                 echo "Vous avez écrit : " . $_POST['texte'] . "<br>";
         ?>
+    
             <!-- Formulaire pour se déconnecter -->
             <form method="post" action="login.php">
                 <p>
@@ -45,6 +43,7 @@ session_start();
         <?php
         } else {
         ?>
+        <div class="container d-flex flex-column align-items-center shadow rounded-2 mt-8 mx-auto custom-bg-color p-5 pt-4 mt-4">
             <h1>Veuillez entrer vos identifiants</h1>
             <form method="post" action="login.php">
                 <p>
@@ -53,6 +52,7 @@ session_start();
                     <input type="submit" value="Envoyer">
                 </p>
             </form>
+        </div>
         <?php
         }
         ?>

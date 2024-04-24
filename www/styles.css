@@ -3,6 +3,13 @@
 }
 
 body {
-    background-color: #e0e0e0; /* Remplacez cette valeur par la couleur de gris légèrement plus foncée de votre choix */
+    background-color: #e0e0e0; /* Remplacez cette valeur par la couleur de gris de votre choix */
 }
 
+.navbar-brand {
+    font-size: 25px; /* Taille de police souhaitée */
+}
+
+.custom-bg-color {
+    background-color: #f2f2f2; /* Remplacez #YourColor par la couleur de votre choix */
+}
