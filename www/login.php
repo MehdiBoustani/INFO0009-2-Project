@@ -12,7 +12,7 @@ session_start();
         if (isset($_POST['disconnect'])) {
             session_unset();
         }
-        $bdd = new PDO('mysql:host=ms8db;dbname=groupXX', 'groupXX', 'secret');
+        $bdd = new PDO('mysql:host=localhost;dbname=groupXX', 'group9', 'tabodi');
         if ($bdd == NULL)
             echo "Problème de connection";
         if (isset($_POST["login"])) {

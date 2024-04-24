@@ -22,7 +22,7 @@
         </tr>
 
     <?php
-        $bdd = new PDO('mysql:host=db;dbname=groupXX;charset=utf8', 'groupXX', 'secret');
+        $bdd = new PDO('mysql:host=db;dbname=groupXX;charset=utf8', 'group9', 'tabodi');
     
         $req = $bdd->query('SELECT DNO, DNAME FROM department');
         while ($tuple = $req->fetch()) {
