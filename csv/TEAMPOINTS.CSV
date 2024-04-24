@@ -1,0 +1,19 @@
+SERIES_NAME;EPISODE_NUMBER;TASK_NUMBER;TEAM_ID;POINTS;WASDISQUALIFIED
+Series 1 (UK);4;3;1;1;0
+Series 1 (UK);4;3;2;2;0
+Series 1 (UK);5;4;1;2;0
+Series 1 (UK);5;4;2;0;0
+Series 1 (UK);6;3;1;2;0
+Series 1 (UK);6;3;2;0;0
+Series 1 (NZ);3;3;3;3;0
+Series 1 (NZ);3;3;4;5;0
+Series 1 (NZ);4;3;3;3;0
+Series 1 (NZ);4;3;4;3;0
+Series 1 (NZ);6;3;3;4;0
+Series 1 (NZ);6;3;4;2;0
+Series 1 (NZ);9;3;3;5;0
+Series 1 (NZ);9;3;4;3;0
+Series 1 (NZ);10;3;3;1;0
+Series 1 (NZ);10;3;4;4;0
+Series 3 (UK);2;3;5;0;0
+Series 3 (UK);2;3;6;5;0
