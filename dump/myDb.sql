@@ -9,122 +9,109 @@ SET time_zone = "+00:00";
 ;
 /*!40101 SET NAMES utf8mb4 */
 ;
---
--- Tabelstructuur voor tabel `department`
---
-CREATE TABLE `department` (
-  `DNO` int NOT NULL,
-  `DNAME` varchar(15) NOT NULL,
-  `MGR_ID` char(11) DEFAULT NULL,
-  `MGR_START` date DEFAULT NULL
+
+-- -------------------------------------------------------------------------------------------------------------------------------
+-- Création de la table 'person'
+CREATE TABLE IF NOT EXISTS `person` (
+  `ID` int PRIMARY KEY,
+  `FIRSTNAME` varchar(15) NOT NULL,
+  `LASTNAME` char(11) DEFAULT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
---
--- Gegevens worden geëxporteerd voor tabel `department`
---
-INSERT INTO `department` (`DNO`, `DNAME`, `MGR_ID`, `MGR_START`)
-VALUES (1, 'Montefiore', NULL, NULL),
-  (2, 'The Cat Cave', NULL, NULL);
--- --------------------------------------------------------
---
--- Tabelstructuur voor tabel `employee`
---
-CREATE TABLE `employee` (
-  `EMP_ID` char(11) NOT NULL,
-  `FNAME` varchar(15) NOT NULL,
-  `LNAME` varchar(15) NOT NULL,
-  `BDATE` date DEFAULT NULL,
-  `ADDRESS` varchar(30) DEFAULT NULL,
-  `SALARY` decimal(10, 2) DEFAULT NULL,
-  `DEPT_NO` int NOT NULL
+
+-- Chargement des données dans la table 'person'
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/PERSON.CSV' INTO TABLE `person` FIELDS TERMINATED BY ';' LINES TERMINATED BY '\n' IGNORE 1 ROWS;
+-- -------------------------------------------------------------------------------------------------------------------------------
+
+-- -------------------------------------------------------------------------------------------------------------------------------
+-- Création de la table 'candidate'
+CREATE TABLE IF NOT EXISTS `candidate` (
+  `ID` int PRIMARY KEY
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
---
--- Gegevens worden geëxporteerd voor tabel `employee`
---
-INSERT INTO `employee` (
-    `EMP_ID`,
-    `FNAME`,
-    `LNAME`,
-    `BDATE`,
-    `ADDRESS`,
-    `SALARY`,
-    `DEPT_NO`
-  )
-VALUES (
-    '1',
-    'Christophe',
-    'Debruyne',
-    NULL,
-    NULL,
-    NULL,
-    1
-  ),
-  (
-    '2',
-    'Victor',
-    'Debruyne-Sieuw',
-    NULL,
-    NULL,
-    NULL,
-    2
-  ),
-  (
-    '3',
-    'Gaston',
-    'Sieuw-Debruyne',
-    NULL,
-    NULL,
-    NULL,
-    2
-  ),
-  (
-    '4',
-    'Bettina',
-    'Sieuw-Debruyne',
-    NULL,
-    NULL,
-    NULL,
-    2
-  );
--- --------------------------------------------------------
---
--- Tabelstructuur voor tabel `users`
---
-CREATE TABLE `users` (
-  `Login` varchar(20) NOT NULL,
+
+-- Chargement des données dans la table 'candidate'
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/CANDIDATE.CSV' INTO TABLE `candidate` FIELDS TERMINATED BY ';' IGNORE 1 ROWS;
+-- -------------------------------------------------------------------------------------------------------------------------------
+
+-- -------------------------------------------------------------------------------------------------------------------------------
+-- Création de la table 'users'
+CREATE TABLE IF NOT EXISTS `users` (
+  `Login` varchar(20) PRIMARY KEY NOT NULL,
   `Pass` varchar(20) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
---
--- Gegevens worden geëxporteerd voor tabel `users`
---
-INSERT INTO `users` (`Login`, `Pass`)
-VALUES ('Pierre', 'incorrect'),
-  ('Sam', 'motdepasse');
---
--- Indexen voor geëxporteerde tabellen
---
---
--- Indexen voor tabel `department`
---
-ALTER TABLE `department`
-ADD PRIMARY KEY (`DNO`),
-  ADD UNIQUE KEY `DNAME` (`DNAME`);
---
--- Indexen voor tabel `employee`
---
-ALTER TABLE `employee`
-ADD PRIMARY KEY (`EMP_ID`),
-  ADD KEY `DEPT_NO` (`DEPT_NO`);
---
--- Beperkingen voor geëxporteerde tabellen
---
---
--- Beperkingen voor tabel `employee`
---
-ALTER TABLE `employee`
-ADD CONSTRAINT `employee_ibfk_1` FOREIGN KEY (`DEPT_NO`) REFERENCES `department` (`DNO`);
 
-ALTER TABLE `department`
-ADD CONSTRAINT `department_ibfk_1` FOREIGN KEY (`MGR_ID`) REFERENCES `employee` (`EMP_ID`);
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/users.csv' INTO TABLE `users` FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS;
+-- -------------------------------------------------------------------------------------------------------------------------------
+
+-- -------------------------------------------------------------------------------------------------------------------------------
+-- Création de la table 'taskmaster'
+CREATE TABLE IF NOT EXISTS `taskmaster` (
+  `ID` int PRIMARY KEY
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
+
+-- Chargement des données dans la table 'taskmaster'
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/TASKMASTER.CSV' INTO TABLE `taskmaster` FIELDS TERMINATED BY ';' IGNORE 1 ROWS;
+-- -------------------------------------------------------------------------------------------------------------------------------
+
+-- -------------------------------------------------------------------------------------------------------------------------------
+-- Création de la table 'assistant'
+CREATE TABLE IF NOT EXISTS `assistant` (
+  `ID` int PRIMARY KEY
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
+
+-- Chargement des données dans la table 'assistant'
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/ASSISTANT.CSV' INTO TABLE `assistant` FIELDS TERMINATED BY ';' IGNORE 1 ROWS;
+-- -------------------------------------------------------------------------------------------------------------------------------
+
+-- -------------------------------------------------------------------------------------------------------------------------------
+-- Création de la table 'job'
+CREATE TABLE IF NOT EXISTS `job` (
+  `CANDIDATE_ID` int NOT NULL,
+  `JOB` varchar(50) NOT NULL,
+  FOREIGN KEY (CANDIDATE_ID) REFERENCES candidate (ID)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
+
+-- Chargement des données dans la table 'job'
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/JOB.CSV' INTO TABLE `job` FIELDS TERMINATED BY ';' IGNORE 1 ROWS;
+-- -------------------------------------------------------------------------------------------------------------------------------
+
+-- -------------------------------------------------------------------------------------------------------------------------------
+-- Création de la table 'series'
+CREATE TABLE IF NOT EXISTS `series` (
+  `NAME` varchar(20) PRIMARY KEY,
+  `NETWORK` varchar(20) NOT NULL,
+  `STARTDATE` date NOT NULL,
+  `ENDDATE` date NOT NULL,
+  `TASKMASTER_ID` int NOT NULL,
+  `ASSISTANT_ID` int NOT NULL,
+  `CHAMPION_ID` int DEFAULT NULL,
+
+  FOREIGN KEY (TASKMASTER_ID) REFERENCES taskmaster (ID),
+  FOREIGN KEY (ASSISTANT_ID) REFERENCES assistant (ID),
+  FOREIGN KEY (CHAMPION_ID) REFERENCES candidate (ID)
+
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
+
+-- Chargement des données dans la table 'series'
+-- LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/SERIES.CSV' INTO TABLE `series` FIELDS TERMINATED BY ';' IGNORE 1 ROWS;
+-- -------------------------------------------------------------------------------------------------------------------------------
+
+-- -------------------------------------------------------------------------------------------------------------------------------
+-- Création de la table 'episode'
+CREATE TABLE IF NOT EXISTS `episode` (
+  `SERIES_NAME` varchar(20) NOT NULL,
+  `EPISODE_NUMBER` int NOT NULL,
+  `TASK_NUMBER` int NOT NULL,
+  `TITLE` varchar(50) NOT NULL,
+  `AIRDATE` date NOT NULL,
+  `WINNER_ID` varchar(20),
+
+  FOREIGN KEY (SERIES_NAME) REFERENCES series (NAME)
+
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
+
+-- Chargement des données dans la table 'episode'
+-- LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/EPISODE.CSV' INTO TABLE `episode` FIELDS TERMINATED BY ';' IGNORE 1 ROWS;
+-- -------------------------------------------------------------------------------------------------------------------------------
 
 COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */
@@ -133,5 +120,3 @@ COMMIT;
 ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */
 ;
-
-LOAD DATA INFILE '/docker-entrypoint-initdb.d/users.csv' INTO TABLE `users` FIELDS TERMINATED BY ',' ENCLOSED BY '"' IGNORE 1 ROWS;
