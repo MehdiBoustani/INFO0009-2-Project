@@ -19,6 +19,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="./exemple-form-transactions.php">Exemple formulaire + gestion de transactions</a>
                     </li>
+                    <li class="nav-item">
+                        <a class = "nav-link" href="./totaux-glissants.php">Exemple totaux</a>
+                    </li>
                 </ul>
             <?php endif; ?>
         </div>
