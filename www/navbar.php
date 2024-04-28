@@ -11,7 +11,7 @@
                         <a class="nav-link" href="./exemple-php.php">Exemple PHP</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="./exemple-php-mysql.php">Exemple complet PHP + MySQL</a>
+                        <a class="nav-link" href="./exemple-php-mysql.php">Utilisateurs</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="./exemple-form.php">Exemple formulaire</a>
