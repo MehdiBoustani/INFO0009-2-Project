@@ -8,7 +8,7 @@ include 'navbar.php';
         <?php if (isset($_SESSION['login'])): ?>
             <h1>Bienvenue <?php echo $_SESSION['login']; ?></h1>
             <h2>Entrez un petit texte</h2>
-            <form method="post" action="login.php">
+            <form method="post" action="index.php">
                 <p>
                     <input type="text" class="form-control" name="texte">
                     <button type="submit" class="btn btn-block btn-primary" style="margin-top: 10px;"> Envoyer</button>
