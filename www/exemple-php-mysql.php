@@ -1,8 +1,10 @@
 <?php
-session_start();
-include 'header.html';
-include 'navbar.php';
+    session_start();
+    include 'header.html';
+    include 'navbar.php';
 ?>
+
+<body>
     <!-- Connexion a la base de données -->
     <?php
     $bdd = new PDO('mysql:host=db;dbname=group9;charset=utf8', 'group9', 'tabodi');

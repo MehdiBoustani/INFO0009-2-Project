@@ -1,7 +1,7 @@
 <?php
-session_start();
-include 'header.html';
-include 'navbar.php';
+    session_start();
+    include 'header.html';
+    include 'navbar.php';
 ?>
 
 <body>

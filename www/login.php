@@ -1,13 +1,16 @@
 <?php
-session_start();
+    session_start();
+    include 'header.html';
+    include 'navbar.php';
 ?>
-    <?php include 'header.html'; ?>
-    <?php include 'navbar.php'; ?>
-    <body>
+
+<body>
         <?php
         if (isset($_POST['disconnect'])) {
             session_unset();
+            echo '<script>window.location.replace("login.php");</script>';
         }
+        
         $bdd = new PDO('mysql:host=db;dbname=group9;charset=utf8', 'group9', 'tabodi');
         if ($bdd == NULL)
             echo "Problème de connexion";
@@ -18,6 +21,7 @@ session_start();
             $tuple = $req->fetch();
             if ($tuple) {
                 $_SESSION['login'] = $tuple["Login"];
+                echo '<script>window.location.replace("index.php");</script>';
             } else
                 echo "<div class='error-box'>Votre login/mot de passe est incorrect</div>";
         }
