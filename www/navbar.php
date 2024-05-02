@@ -22,6 +22,9 @@
                     <li class="nav-item">
                         <a class = "nav-link" href="./totaux-glissants.php">Exemple totaux</a>
                     </li>
+                    <li class="nav-item">
+                        <a class = "nav-link" href="./tables.php">Selection de données</a>
+                    </li>
                 </ul>
             <?php endif; ?>
         </div>

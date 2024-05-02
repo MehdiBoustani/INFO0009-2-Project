@@ -36,10 +36,10 @@
                 <h1>Se connecter</h1>
                 <form method="post" action="login.php">
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" style="width: 350px;" placeholder="Nom d'utilisateur" aria-label="Username" aria-describedby="basic-addon1" name="login" required>
+                        <input type="text" class="form-control" style="width: 350px;" placeholder="Nom d'utilisateur" name="login" required>
                     </div>
                     <div class="input-group mb-3">
-                        <input type="password" class="form-control" style="width: 350px;" placeholder="Mot de passe" aria-label="Password" aria-describedby="basic-addon2" name="pass" required>
+                        <input type="password" class="form-control" style="width: 350px;" placeholder="Mot de passe" name="pass" required>
                     </div>
                     <div class="d-grid gap-2 mx-auto">
                         <button type="submit" class="btn btn-block custom-btn" style="width: 380px;">Connexion</button>
