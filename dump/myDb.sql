@@ -15,14 +15,14 @@ SET time_zone = "+00:00";
 CREATE TABLE IF NOT EXISTS `person` (
   `ID` int NOT NULL,
   `FIRSTNAME` varchar(15) NOT NULL,
-  `LASTNAME` char(11) DEFAULT NULL,
+  `LASTNAME` varchar(15) NOT NULL,
 
   PRIMARY KEY (ID)
 
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
 -- Chargement des données dans la table 'person'
-LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/PERSON.CSV' INTO TABLE `person` FIELDS TERMINATED BY ';' LINES TERMINATED BY '\n' IGNORE 1 ROWS;
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/PERSON.CSV' INTO TABLE `person` FIELDS TERMINATED BY ';' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS;
 -- -------------------------------------------------------------------------------------------------------------------------------
 
 -- -------------------------------------------------------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `assistant` (
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
 -- Chargement des données dans la table 'assistant'
-LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/ASSISTANT.CSV' INTO TABLE `assistant` FIELDS TERMINATED BY ';' IGNORE 1 ROWS;
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/ASSISTANT.CSV' INTO TABLE `assistant` FIELDS TERMINATED BY ';' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS;
 -- -------------------------------------------------------------------------------------------------------------------------------
 
 -- -------------------------------------------------------------------------------------------------------------------------------
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `candidate` (
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
 -- Chargement des données dans la table 'candidate'
-LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/CANDIDATE.CSV' INTO TABLE `candidate` FIELDS TERMINATED BY ';' IGNORE 1 ROWS;
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/CANDIDATE.CSV' INTO TABLE `candidate` FIELDS TERMINATED BY ';' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS;
 -- -------------------------------------------------------------------------------------------------------------------------------
 
 -- -------------------------------------------------------------------------------------------------------------------------------
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS `job` (
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
 -- Chargement des données dans la table 'job'
-LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/JOB.CSV' INTO TABLE `job` FIELDS TERMINATED BY ';' IGNORE 1 ROWS;
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/JOB.CSV' INTO TABLE `job` FIELDS TERMINATED BY ';' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS;
 -- -------------------------------------------------------------------------------------------------------------------------------
 
 -- -------------------------------------------------------------------------------------------------------------------------------
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `taskmaster` (
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
 -- Chargement des données dans la table 'taskmaster'
-LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/TASKMASTER.CSV' INTO TABLE `taskmaster` FIELDS TERMINATED BY ';' IGNORE 1 ROWS;
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/TASKMASTER.CSV' INTO TABLE `taskmaster` FIELDS TERMINATED BY ';' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS;
 -- -------------------------------------------------------------------------------------------------------------------------------
 
 -- -------------------------------------------------------------------------------------------------------------------------------
@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `series` (
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
 -- Chargement des données dans la table 'series'
-LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/SERIES.CSV' INTO TABLE `series` FIELDS TERMINATED BY ';' IGNORE 1 ROWS (NAME, NETWORK, STARTDATE, ENDDATE, TASKMASTER_ID, ASSISTANT_ID, @champion_id)
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/SERIES.CSV' INTO TABLE `series` FIELDS TERMINATED BY ';' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS (NAME, NETWORK, STARTDATE, ENDDATE, TASKMASTER_ID, ASSISTANT_ID, @champion_id)
 SET CHAMPION_ID = NULLIF(@champion_id,'');
 -- -------------------------------------------------------------------------------------------------------------------------------
 
@@ -119,7 +119,7 @@ CREATE TABLE IF NOT EXISTS `feature` (
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
 -- Chargement des données dans la table 'feature'
-LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/FEATURE.CSV' INTO TABLE `feature` FIELDS TERMINATED BY ';' IGNORE 1 ROWS;
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/FEATURE.CSV' INTO TABLE `feature` FIELDS TERMINATED BY ';' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS;
 -- -------------------------------------------------------------------------------------------------------------------------------
 
 -- -------------------------------------------------------------------------------------------------------------------------------
@@ -172,7 +172,7 @@ CREATE TABLE IF NOT EXISTS `episode` (
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
 -- Chargement des données dans la table 'episode'
-LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/EPISODE.CSV' INTO TABLE `episode` FIELDS TERMINATED BY ';' IGNORE 1 ROWS (SERIES_NAME, EPISODE_NUMBER, TITLE, AIRDATE, @winner_id)
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/EPISODE.CSV' INTO TABLE `episode` FIELDS TERMINATED BY ';' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS (SERIES_NAME, EPISODE_NUMBER, TITLE, AIRDATE, @winner_id)
 SET WINNER_ID = NULLIF(@winner_id,'');
 -- -------------------------------------------------------------------------------------------------------------------------------
 

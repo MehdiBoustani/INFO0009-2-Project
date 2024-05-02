@@ -26,7 +26,7 @@
                 echo "<div class='error-box'>Votre login/mot de passe est incorrect</div>";
         }
         ?>
-        <div class="container d-flex flex-column align-items-center shadow rounded-2 mt-8 mx-auto custom-bg-color p-5 pt-4 mt-4 text-center">
+        <div class="container d-flex flex-column align-items-center card shadow rounded-2 mt-8 mx-auto custom-bg-color p-5 pt-4 mt-4 text-center">
             <?php if (isset($_SESSION['login'])): ?>
                 <form method="post" action="login.php">
                     <input type="hidden" name="disconnect" value="yes">
@@ -50,26 +50,4 @@
         </div>
     </body>
 </html>
-<style>
-    .custom-btn {
-        background-color: #982627;
-        color: white;
-        transition: background-color 0.3s, color 0.3s;
-    }
-
-    .custom-btn:hover {
-        background-color: #7c1e20;
-        color: #f2f2f2;
-    }
-
-    .error-box {
-        background-color: #ffebee;
-        color: #c62828;
-        padding: 10px;
-        margin-bottom: 10px;
-        border: 1px solid #c62828;
-        border-radius: 5px;
-    }
-
-</style>
 

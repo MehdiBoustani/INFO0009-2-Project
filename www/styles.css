@@ -6,11 +6,40 @@ body {
     background-color: #e0e0e0; /* Remplacez cette valeur par la couleur de gris de votre choix */
 }
 
+.custom-btn {
+    background-color: #982627;
+    color: white;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.custom-btn:hover {
+    background-color: #7c1e20;
+    color: #f2f2f2;
+}
+
 .navbar-brand {
     font-size: 25px; /* Taille de police souhaitée */
 }
 
 .custom-bg-color {
     background-color: #f2f2f2; /* Remplacez #YourColor par la couleur de votre choix */
+}
+
+.error-box {
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #c62828;
+    border-radius: 5px;
+}
+
+.nice-box {
+    background-color: #ffebee;
+    color: #34a12a;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #34a12a;
+    border-radius: 5px;
 }
 
