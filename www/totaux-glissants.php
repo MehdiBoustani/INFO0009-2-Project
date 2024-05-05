@@ -5,6 +5,34 @@ include 'navbar.php';
 
 // Database connection
 $bdd = new PDO('mysql:host=db;dbname=group9;charset=utf8', 'group9', 'tabodi');
+?>
+
+<body>
+    <div class="container d-flex flex-column align-items-center card shadow rounded-2 mt-8 mx-auto custom-bg-color p-5 pt-4 mt-4">
+        <h1>Sélectionner une série</h1>
+        <form method="post" action="totaux-glissants.php">
+            <div class="input-group mb-3">
+                <!-- Dropdown list for series names -->
+                <select class="form-select" style = "width: 300px;" name="name">
+                    <option value="">Sélectionner une série</option>
+                    <?php
+                    // Fetch all series names from the database
+                    $req = $bdd->query('SELECT NAME FROM series');
+                    while ($row = $req->fetch(PDO::FETCH_ASSOC)) {
+                        echo "<option value='" . $row['NAME'] . "'>" . $row['NAME'] . "</option>";
+                    }
+                    ?>
+                </select>
+            </div>
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn custom-btn">Envoyer</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
+
+<?php
 
 if (isset($_POST['name'])) {
     $name = $_POST['name'];
@@ -28,28 +56,17 @@ if (isset($_POST['name'])) {
         $req2->bindParam(':name', $name, PDO::PARAM_STR);
         $req2->execute();
 
-        echo "<style>
-        table {
-        width: 100%;
-        border-collapse: collapse;
-        }
-        th, td {
-        border: 1px solid black;
-        }
-        caption {
-            caption-side: top; /* Position de la légende au-dessus de la table */
-            font-weight: bold; /* Pour un style plus prononcé */
-        }
-        </style>";
+        echo "<div class='container d-flex flex-column align-items-center card shadow rounded-2 mt-8 mx-auto custom-bg-color p-5 pt-4 mt-4'>";
+        echo "<table class='table table-bordered table-hover'>";
 
-        echo "<table>";
-
-        echo "<caption>Totaux glissants des candidats : $name</caption>"; // Ajoutez le titre de la table
+        echo "<caption style='caption-side: top; font-weight: bold;'>Totaux glissants des candidats : $name</caption>"; // Ajoutez le titre de la table
 
         echo "<tr>";
+        echo "<th>Episode</th>";
 
         $candidates = [];
         $list = [];
+        $count = 1;
 
         while ($row = $req2->fetch(PDO::FETCH_ASSOC)) {
             $candidateName = $row['FIRSTNAME'] . ' ' . $row['LASTNAME'];
@@ -71,42 +88,19 @@ if (isset($_POST['name'])) {
             $list[] = $slidingTotal;
             if (count($list) == 5) {
                 echo "<tr>";
+                echo "<td>$count</td>";
                 foreach ($list as $item) {
                     echo "<td>$item</td>";
                 }
                 echo "</tr>";
 
                 $list = []; //empty list of totals 
+                $count++;
             }
         }
 
-        echo "</table>";
+        echo "</table></div>";
     }
 }
 
 ?>
-
-<body>
-    <div class="container d-flex flex-column align-items-center card shadow rounded-2 mt-8 mx-auto custom-bg-color p-5 pt-4 mt-4">
-        <h1>Sélectionner une série</h1>
-        <form method="post" action="totaux-glissants.php">
-            <div class="input-group mb-3">
-                <!-- Dropdown list for series names -->
-                <select class="form-select" name="name">
-                    <option value="">Sélectionner une série</option>
-                    <?php
-                    // Fetch all series names from the database
-                    $req = $bdd->query('SELECT NAME FROM series');
-                    while ($row = $req->fetch(PDO::FETCH_ASSOC)) {
-                        echo "<option value='" . $row['NAME'] . "'>" . $row['NAME'] . "</option>";
-                    }
-                    ?>
-                </select>
-            </div>
-            <div class="d-grid gap-2">
-                <button type="submit" class="btn custom-btn">Envoyer</button>
-            </div>
-        </form>
-    </div>
-</body>
-</html>
