@@ -8,13 +8,7 @@
             <?php if(isset($_SESSION['login'])): ?>
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="./exemple-php.php">Exemple PHP</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="./exemple-php-mysql.php">Utilisateurs</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="./exemple-form.php">Exemple formulaire</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="./exemple-form-transactions.php">Exemple formulaire + gestion de transactions</a>

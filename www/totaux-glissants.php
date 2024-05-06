@@ -46,10 +46,10 @@ if (isset($_POST['name'])) {
         echo "<div class='error-box'>Vous n'avez pas choisi une série</div>";
     }
     else {
-        $req2 = $bdd->prepare('SELECT FIRSTNAME, LASTNAME, SUM(POINTS) AS TOTAL_POINTS, EPISODE_NUMBER
-                               FROM person, points                               
+        $req2 = $bdd->prepare('SELECT person.FIRSTNAME, person.LASTNAME, SUM(points.POINTS) AS TOTAL_POINTS, points.EPISODE_NUMBER
+                               FROM person
+                               JOIN points ON points.CANDIDATE_ID = person.ID                      
                                WHERE SERIES_NAME =:name
-                               AND points.CANDIDATE_ID = person.ID
                                GROUP BY person.FIRSTNAME, person.LASTNAME, points.EPISODE_NUMBER
                                ORDER BY points.EPISODE_NUMBER ASC, person.FIRSTNAME ASC');
         

@@ -171,12 +171,12 @@ CREATE TABLE IF NOT EXISTS `episode` (
 
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
+ALTER TABLE `episode` ADD INDEX idx_episode_number (EPISODE_NUMBER);
+
 -- Chargement des données dans la table 'episode'
 LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/EPISODE.CSV' INTO TABLE `episode` FIELDS TERMINATED BY ';' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS (SERIES_NAME, EPISODE_NUMBER, TITLE, AIRDATE, @winner_id)
 SET WINNER_ID = NULLIF(@winner_id,'');
 -- -------------------------------------------------------------------------------------------------------------------------------
-
-ALTER TABLE `episode` ADD INDEX idx_episode_number (EPISODE_NUMBER);
 
 -- -------------------------------------------------------------------------------------------------------------------------------
 -- Création de la table 'task'
