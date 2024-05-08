@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS `person` (
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
 -- Chargement des données dans la table 'person'
-LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/PERSON.CSV' INTO TABLE `person` FIELDS TERMINATED BY ';' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS;
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/PERSON.CSV' INTO TABLE `person` FIELDS TERMINATED BY ';'  IGNORE 1 ROWS;
 -- -------------------------------------------------------------------------------------------------------------------------------
 
 -- -------------------------------------------------------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `assistant` (
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
 -- Chargement des données dans la table 'assistant'
-LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/ASSISTANT.CSV' INTO TABLE `assistant` FIELDS TERMINATED BY ';' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS;
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/ASSISTANT.CSV' INTO TABLE `assistant` FIELDS TERMINATED BY ';'  IGNORE 1 ROWS;
 -- -------------------------------------------------------------------------------------------------------------------------------
 
 -- -------------------------------------------------------------------------------------------------------------------------------
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `candidate` (
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
 -- Chargement des données dans la table 'candidate'
-LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/CANDIDATE.CSV' INTO TABLE `candidate` FIELDS TERMINATED BY ';' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS;
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/CANDIDATE.CSV' INTO TABLE `candidate` FIELDS TERMINATED BY ';'  IGNORE 1 ROWS;
 -- -------------------------------------------------------------------------------------------------------------------------------
 
 -- -------------------------------------------------------------------------------------------------------------------------------
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS `job` (
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
 -- Chargement des données dans la table 'job'
-LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/JOB.CSV' INTO TABLE `job` FIELDS TERMINATED BY ';' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS;
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/JOB.CSV' INTO TABLE `job` FIELDS TERMINATED BY ';'  IGNORE 1 ROWS;
 -- -------------------------------------------------------------------------------------------------------------------------------
 
 -- -------------------------------------------------------------------------------------------------------------------------------
@@ -77,13 +77,13 @@ CREATE TABLE IF NOT EXISTS `taskmaster` (
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
 -- Chargement des données dans la table 'taskmaster'
-LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/TASKMASTER.CSV' INTO TABLE `taskmaster` FIELDS TERMINATED BY ';' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS;
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/TASKMASTER.CSV' INTO TABLE `taskmaster` FIELDS TERMINATED BY ';'  IGNORE 1 ROWS;
 -- -------------------------------------------------------------------------------------------------------------------------------
 
 -- -------------------------------------------------------------------------------------------------------------------------------
 -- Création de la table 'series'
 CREATE TABLE IF NOT EXISTS `series` (
-  `NAME` varchar(20) NOT NULL,
+  `SERIES_NAME` varchar(20) NOT NULL,
   `NETWORK` varchar(20) NOT NULL,
   `STARTDATE` date NOT NULL,
   `ENDDATE` date NOT NULL,
@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS `series` (
   `ASSISTANT_ID` int NOT NULL,
   `CHAMPION_ID` int DEFAULT NULL,
 
-  PRIMARY KEY (NAME),
+  PRIMARY KEY (SERIES_NAME),
 
   FOREIGN KEY (TASKMASTER_ID) REFERENCES taskmaster (ID),
   FOREIGN KEY (ASSISTANT_ID) REFERENCES assistant (ID),
@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `series` (
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
 -- Chargement des données dans la table 'series'
-LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/SERIES.CSV' INTO TABLE `series` FIELDS TERMINATED BY ';' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS (NAME, NETWORK, STARTDATE, ENDDATE, TASKMASTER_ID, ASSISTANT_ID, @champion_id)
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/SERIES.CSV' INTO TABLE `series` FIELDS TERMINATED BY ';'  IGNORE 1 ROWS (SERIES_NAME, NETWORK, STARTDATE, ENDDATE, TASKMASTER_ID, ASSISTANT_ID, @champion_id)
 SET CHAMPION_ID = NULLIF(@champion_id,'');
 -- -------------------------------------------------------------------------------------------------------------------------------
 
@@ -113,13 +113,13 @@ CREATE TABLE IF NOT EXISTS `feature` (
 
   PRIMARY KEY (SERIES_NAME, CANDIDATE_ID),
 
-  FOREIGN KEY (SERIES_NAME) REFERENCES series (NAME),
+  FOREIGN KEY (SERIES_NAME) REFERENCES series (SERIES_NAME),
   FOREIGN KEY (CANDIDATE_ID) REFERENCES candidate (ID)
 
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
 -- Chargement des données dans la table 'feature'
-LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/FEATURE.CSV' INTO TABLE `feature` FIELDS TERMINATED BY ';' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS;
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/FEATURE.CSV' INTO TABLE `feature` FIELDS TERMINATED BY ';'  IGNORE 1 ROWS;
 -- -------------------------------------------------------------------------------------------------------------------------------
 
 -- -------------------------------------------------------------------------------------------------------------------------------
@@ -130,12 +130,12 @@ CREATE TABLE IF NOT EXISTS `team` (
 
   PRIMARY KEY (ID),
 
-  FOREIGN KEY (SERIES_NAME) REFERENCES series (NAME)
+  FOREIGN KEY (SERIES_NAME) REFERENCES series (SERIES_NAME)
 
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
 -- Chargement des données dans la table 'team'
-LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/TEAM.CSV' INTO TABLE `team` FIELDS TERMINATED BY ';' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS;
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/TEAM.CSV' INTO TABLE `team` FIELDS TERMINATED BY ';'  IGNORE 1 ROWS;
 -- -------------------------------------------------------------------------------------------------------------------------------
 
 -- -------------------------------------------------------------------------------------------------------------------------------
@@ -152,7 +152,7 @@ CREATE TABLE IF NOT EXISTS `membership` (
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
 -- Chargement des données dans la table 'membership'
-LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/MEMBERSHIP.CSV' INTO TABLE `membership` FIELDS TERMINATED BY ';' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS;
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/MEMBERSHIP.CSV' INTO TABLE `membership` FIELDS TERMINATED BY ';'  IGNORE 1 ROWS;
 -- -------------------------------------------------------------------------------------------------------------------------------
 
 -- -------------------------------------------------------------------------------------------------------------------------------
@@ -166,15 +166,14 @@ CREATE TABLE IF NOT EXISTS `episode` (
 
   PRIMARY KEY (SERIES_NAME, EPISODE_NUMBER),
 
-  FOREIGN KEY (SERIES_NAME) REFERENCES series (NAME),
+  FOREIGN KEY (SERIES_NAME) REFERENCES series (SERIES_NAME),
   FOREIGN KEY (WINNER_ID) REFERENCES candidate (ID)
 
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
-ALTER TABLE `episode` ADD INDEX idx_episode_number (EPISODE_NUMBER);
 
 -- Chargement des données dans la table 'episode'
-LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/EPISODE.CSV' INTO TABLE `episode` FIELDS TERMINATED BY ';' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS (SERIES_NAME, EPISODE_NUMBER, TITLE, AIRDATE, @winner_id)
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/EPISODE.CSV' INTO TABLE `episode` FIELDS TERMINATED BY ';' IGNORE 1 ROWS (SERIES_NAME, EPISODE_NUMBER, TITLE, AIRDATE, @winner_id)
 SET WINNER_ID = NULLIF(@winner_id,'');
 -- -------------------------------------------------------------------------------------------------------------------------------
 
@@ -189,15 +188,12 @@ CREATE TABLE IF NOT EXISTS `task` (
 
   PRIMARY KEY (SERIES_NAME, EPISODE_NUMBER, TASK_NUMBER),
 
-  FOREIGN KEY (SERIES_NAME) REFERENCES series (NAME),
-  FOREIGN KEY (EPISODE_NUMBER) REFERENCES episode (EPISODE_NUMBER)
+  FOREIGN KEY (SERIES_NAME, EPISODE_NUMBER) REFERENCES episode (SERIES_NAME, EPISODE_NUMBER)
 
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
-ALTER TABLE `task` ADD INDEX task_number (TASK_NUMBER);
-
 -- Chargement des données dans la table 'task'
-LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/TASK.CSV' INTO TABLE `task` FIELDS TERMINATED BY ';' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS;
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/TASK.CSV' INTO TABLE `task` FIELDS TERMINATED BY ';'  IGNORE 1 ROWS;
 -- -------------------------------------------------------------------------------------------------------------------------------
 
 -- -------------------------------------------------------------------------------------------------------------------------------
@@ -209,14 +205,12 @@ CREATE TABLE IF NOT EXISTS `individualtask` (
 
   PRIMARY KEY (SERIES_NAME, EPISODE_NUMBER, TASK_NUMBER),
 
-  FOREIGN KEY (SERIES_NAME) REFERENCES series (NAME),
-  FOREIGN KEY (EPISODE_NUMBER) REFERENCES episode (EPISODE_NUMBER),
-  FOREIGN KEY (TASK_NUMBER) REFERENCES task (TASK_NUMBER)
+  FOREIGN KEY (SERIES_NAME, EPISODE_NUMBER, TASK_NUMBER) REFERENCES task (SERIES_NAME, EPISODE_NUMBER, TASK_NUMBER)
 
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
 -- Chargement des données dans la table 'individualtask'
-LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/INDIVIDUALTASK.CSV' INTO TABLE `individualtask` FIELDS TERMINATED BY ';' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS;
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/INDIVIDUALTASK.CSV' INTO TABLE `individualtask` FIELDS TERMINATED BY ';'  IGNORE 1 ROWS;
 -- -------------------------------------------------------------------------------------------------------------------------------
 
 -- -------------------------------------------------------------------------------------------------------------------------------
@@ -228,14 +222,12 @@ CREATE TABLE IF NOT EXISTS `teamtask` (
 
   PRIMARY KEY (SERIES_NAME, EPISODE_NUMBER, TASK_NUMBER),
 
-  FOREIGN KEY (SERIES_NAME) REFERENCES series (NAME),
-  FOREIGN KEY (EPISODE_NUMBER) REFERENCES episode (EPISODE_NUMBER),
-  FOREIGN KEY (TASK_NUMBER) REFERENCES task (TASK_NUMBER)
+  FOREIGN KEY (SERIES_NAME, EPISODE_NUMBER, TASK_NUMBER) REFERENCES task (SERIES_NAME, EPISODE_NUMBER, TASK_NUMBER)
 
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
 -- Chargement des données dans la table 'teamtask'
-LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/TEAMTASK.CSV' INTO TABLE `teamtask` FIELDS TERMINATED BY ';' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS;
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/TEAMTASK.CSV' INTO TABLE `teamtask` FIELDS TERMINATED BY ';'  IGNORE 1 ROWS;
 -- -------------------------------------------------------------------------------------------------------------------------------
 
 -- -------------------------------------------------------------------------------------------------------------------------------
@@ -249,16 +241,14 @@ CREATE TABLE IF NOT EXISTS `tiebreaker` (
 
   PRIMARY KEY (SERIES_NAME, EPISODE_NUMBER, TASK_NUMBER),
 
-  FOREIGN KEY (SERIES_NAME) REFERENCES series (NAME),
-  FOREIGN KEY (EPISODE_NUMBER) REFERENCES episode (EPISODE_NUMBER),
-  FOREIGN KEY (TASK_NUMBER) REFERENCES task (TASK_NUMBER),
+  FOREIGN KEY (SERIES_NAME, EPISODE_NUMBER, TASK_NUMBER) REFERENCES task (SERIES_NAME, EPISODE_NUMBER, TASK_NUMBER),
   FOREIGN KEY (WINNER_ID) REFERENCES candidate (ID),
   FOREIGN KEY (LOSER_ID) REFERENCES candidate (ID)
 
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
 -- Chargement des données dans la table 'tiebreaker'
-LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/TIEBREAKER.CSV' INTO TABLE `tiebreaker` FIELDS TERMINATED BY ';' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS;
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/TIEBREAKER.CSV' INTO TABLE `tiebreaker` FIELDS TERMINATED BY ';'  IGNORE 1 ROWS;
 -- -------------------------------------------------------------------------------------------------------------------------------
 
 -- -------------------------------------------------------------------------------------------------------------------------------
@@ -273,15 +263,13 @@ CREATE TABLE IF NOT EXISTS `points` (
 
   PRIMARY KEY (SERIES_NAME, EPISODE_NUMBER, TASK_NUMBER, CANDIDATE_ID),
 
-  FOREIGN KEY (SERIES_NAME) REFERENCES series (NAME),
-  FOREIGN KEY (EPISODE_NUMBER) REFERENCES episode (EPISODE_NUMBER),
-  FOREIGN KEY (TASK_NUMBER) REFERENCES task (TASK_NUMBER),
+  FOREIGN KEY (SERIES_NAME, EPISODE_NUMBER, TASK_NUMBER) REFERENCES task (SERIES_NAME, EPISODE_NUMBER, TASK_NUMBER),
   FOREIGN KEY (CANDIDATE_ID) REFERENCES candidate (ID)
 
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
 -- Chargement des données dans la table 'points'
-LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/POINTS.CSV' INTO TABLE `points` FIELDS TERMINATED BY ';' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS;
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/POINTS.CSV' INTO TABLE `points` FIELDS TERMINATED BY ';'  IGNORE 1 ROWS;
 -- -------------------------------------------------------------------------------------------------------------------------------
 
 -- -------------------------------------------------------------------------------------------------------------------------------
@@ -296,15 +284,13 @@ CREATE TABLE IF NOT EXISTS `teampoints` (
 
   PRIMARY KEY (SERIES_NAME, EPISODE_NUMBER, TASK_NUMBER, TEAM_ID),
 
-  FOREIGN KEY (SERIES_NAME) REFERENCES series (NAME),
-  FOREIGN KEY (EPISODE_NUMBER) REFERENCES episode (EPISODE_NUMBER),
-  FOREIGN KEY (TASK_NUMBER) REFERENCES task (TASK_NUMBER),
+  FOREIGN KEY (SERIES_NAME, EPISODE_NUMBER, TASK_NUMBER) REFERENCES task (SERIES_NAME, EPISODE_NUMBER, TASK_NUMBER),
   FOREIGN KEY (TEAM_ID) REFERENCES team (ID)
 
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
 -- Chargement des données dans la table 'teampoints'
-LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/TEAMPOINTS.CSV' INTO TABLE `teampoints` FIELDS TERMINATED BY ';' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS;
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/TEAMPOINTS.CSV' INTO TABLE `teampoints` FIELDS TERMINATED BY ';'  IGNORE 1 ROWS;
 -- -------------------------------------------------------------------------------------------------------------------------------
 
 -- -------------------------------------------------------------------------------------------------------------------------------
@@ -318,15 +304,13 @@ CREATE TABLE IF NOT EXISTS `tiebreakerresult` (
 
   PRIMARY KEY (SERIES_NAME, EPISODE_NUMBER, TASK_NUMBER, CANDIDATE_ID),
 
-  FOREIGN KEY (SERIES_NAME) REFERENCES series (NAME),
-  FOREIGN KEY (EPISODE_NUMBER) REFERENCES episode (EPISODE_NUMBER),
-  FOREIGN KEY (TASK_NUMBER) REFERENCES task (TASK_NUMBER),
+  FOREIGN KEY (SERIES_NAME, EPISODE_NUMBER, TASK_NUMBER) REFERENCES tiebreaker (SERIES_NAME, EPISODE_NUMBER, TASK_NUMBER),
   FOREIGN KEY (CANDIDATE_ID) REFERENCES candidate (ID)
 
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
 -- Chargement des données dans la table 'tiebreakerresult'
-LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/TIEBREAKERRESULT.CSV' INTO TABLE `tiebreakerresult` FIELDS TERMINATED BY ';' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS;
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/TIEBREAKERRESULT.CSV' INTO TABLE `tiebreakerresult` FIELDS TERMINATED BY ';'  IGNORE 1 ROWS;
 -- -------------------------------------------------------------------------------------------------------------------------------
 
 -- -------------------------------------------------------------------------------------------------------------------------------
@@ -339,7 +323,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
 
-LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/users.csv' INTO TABLE `users` FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS;
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/users.csv' INTO TABLE `users` FIELDS TERMINATED BY ',' ENCLOSED BY '"'  IGNORE 1 ROWS;
 -- -------------------------------------------------------------------------------------------------------------------------------
 
 COMMIT;
