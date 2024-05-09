@@ -13,13 +13,13 @@ $bdd = new PDO('mysql:host=db;dbname=group9;charset=utf8', 'group9', 'tabodi');
         <form method="post" action="totaux-glissants.php">
             <div class="input-group mb-3">
                 <!-- Dropdown list for series names -->
-                <select class="form-select" style = "width: 300px;" name="name">
+                <select class="form-select" style = "width: 300px;" name="series_name">
                     <option value="">Sélectionner une série</option>
                     <?php
                     // Fetch all series names from the database
-                    $req = $bdd->query('SELECT NAME FROM series');
+                    $req = $bdd->query('SELECT SERIES_NAME FROM series');
                     while ($row = $req->fetch(PDO::FETCH_ASSOC)) {
-                        echo "<option value='" . $row['NAME'] . "'>" . $row['NAME'] . "</option>";
+                        echo "<option value='" . $row['SERIES_NAME'] . "'>" . $row['SERIES_NAME'] . "</option>";
                     }
                     ?>
                 </select>
@@ -34,12 +34,12 @@ $bdd = new PDO('mysql:host=db;dbname=group9;charset=utf8', 'group9', 'tabodi');
 
 <?php
 
-if (isset($_POST['name'])) {
-    $name = $_POST['name'];
+if (isset($_POST['series_name'])) {
+    $name = $_POST['series_name'];
 
     // Prepare the SQL query
-    $req = $bdd->prepare('SELECT NAME FROM series WHERE NAME = :name');
-    $req->bindParam(':name', $name, PDO::PARAM_STR);
+    $req = $bdd->prepare('SELECT SERIES_NAME FROM series WHERE SERIES_NAME = :series_name');
+    $req->bindParam(':series_name', $name, PDO::PARAM_STR);
     $req->execute();
 
     if ($req->rowCount() <= 0) {
@@ -49,11 +49,11 @@ if (isset($_POST['name'])) {
         $req2 = $bdd->prepare('SELECT person.FIRSTNAME, person.LASTNAME, SUM(points.POINTS) AS TOTAL_POINTS, points.EPISODE_NUMBER
                                FROM person
                                JOIN points ON points.CANDIDATE_ID = person.ID                      
-                               WHERE SERIES_NAME =:name
+                               WHERE SERIES_NAME =:series_name
                                GROUP BY person.FIRSTNAME, person.LASTNAME, points.EPISODE_NUMBER
                                ORDER BY points.EPISODE_NUMBER ASC, person.FIRSTNAME ASC');
         
-        $req2->bindParam(':name', $name, PDO::PARAM_STR);
+        $req2->bindParam(':series_name', $name, PDO::PARAM_STR);
         $req2->execute();
 
         echo "<div class='container d-flex flex-column align-items-center card shadow rounded-2 mt-8 mx-auto custom-bg-color p-5 pt-4 mt-4'>";
