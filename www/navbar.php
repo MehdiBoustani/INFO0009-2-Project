@@ -19,6 +19,9 @@
                     <li class="nav-item">
                         <a class = "nav-link" href="./tables.php">Selection de données</a>
                     </li>
+                    <li class="nav-item">
+                        <a class = "nav-link" href="./ajout-candidate.php">Ajout de candidat</a>
+                    </li>
                 </ul>
             <?php endif; ?>
         </div>
