@@ -33,7 +33,7 @@
             <form method="post" action="tables.php">
                 <p>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" style="width: 400px;" placeholder="Prénom" name="firstname">
+                        <input type="text" class="form-control" style="width: 500px;" placeholder="Prénom" name="firstname">
                     </div>
                     <div class="input-group mb-3">
                         <input type="text" class="form-control" style="width: 400px;" placeholder="Nom de famille" name="lastname">
@@ -72,20 +72,26 @@
                         <input type="text" class="form-control" style="width: 400px;" placeholder="Réseau" name="network">
                     </div>
                     <div class="input-group mb-3">
-                        <input data-provide="datepicker" data-date-format="yyyy-mm-dd" class="form-control" style="width: 400px;" placeholder="Date de début" name="startdate" id="startdate">
+                        <input data-provide="datepicker" data-date-format="yyyy-mm-dd" class="form-control" style="width: 400px;" placeholder="Date de début" name="startdate">
                     </div>
                     <div class="input-group mb-3">
-                        <input data-provide="datepicker" data-date-format="yyyy-mm-dd" class="form-control" style="width: 400px;" placeholder="Date de fin" name="enddate" id="enddate">
+                        <input data-provide="datepicker" data-date-format="yyyy-mm-dd" class="form-control" style="width: 400px;" placeholder="Date de fin" name="enddate">
                     </div>
 
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" style="width: 400px;" placeholder="Taskmaster" name="taskmaster">
+                        <label for="taskmaster_firstname" style="width: 105px;" class="input-group-text">Taskmaster:</label>
+                        <input type="text" class="form-control" style="width: 200px;" placeholder="Prénom" name="taskmaster_firstname">
+                        <input type="text" class="form-control" style="width: 200px;" placeholder="Nom" name="taskmaster_lastname">
                     </div>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" style="width: 400px;" placeholder="Assistant" name="assistant">
+                        <label for="assistant_firstname" style="width: 105px;" class="input-group-text">Assistant:</label>
+                        <input type="text" class="form-control" style="width: 200px;" placeholder="Prénom" name="assistant_firstname">
+                        <input type="text" class="form-control" style="width: 200px;" placeholder="Nom" name="assistant_lastname">
                     </div>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" style="width: 400px;" placeholder="Champion" name="champion">
+                        <label for="champion_firstname" style="width: 105px;" class="input-group-text">Champion:</label>
+                        <input type="text" class="form-control" style="width: 200px;" placeholder="Prénom" name="champion_firstname">
+                        <input type="text" class="form-control" style="width: 200px;" placeholder="Nom" name="champion_lastname">
                     </div>
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn custom-btn">Envoyer</button>
@@ -96,33 +102,33 @@
 
             
             <?php
-                if (isset($_POST['series_name']) || isset($_POST['network']) || isset($_POST['startdate']) || isset($_POST['enddate']) || isset($_POST['taskmaster']) || isset($_POST['assistant']) || isset($_POST['champion'])){
+                if (isset($_POST['series_name']) || isset($_POST['network']) || isset($_POST['startdate']) || isset($_POST['enddate']) || isset($_POST['taskmaster_firstname']) || isset($_POST['taskmaster_lastname']) || isset($_POST['assistant_firstname']) || isset($_POST['assistant_lastname']) || isset($_POST['champion_firstname']) || isset($_POST['champion_lastname'])){
                     $name = $_POST['series_name'];
                     $network = $_POST['network'];
                     $startdate = date('Y-m-d', strtotime($_POST['startdate']));
                     $enddate = date('Y-m-d', strtotime($_POST['enddate']));
-                    $taskmaster = $_POST['taskmaster'];
-                    $assistant = $_POST['assistant'];
-                    $champion = $_POST['champion'];;
+                    $taskmaster_firstname = $_POST['taskmaster_firstname'];
+                    $taskmaster_lastname = $_POST['taskmaster_lastname'];
+                    $assistant_firstname = $_POST['assistant_firstname'];
+                    $assistant_lastname = $_POST['assistant_lastname'];
+                    $champion_firstname = $_POST['champion_firstname'];
+                    $champion_lastname = $_POST['champion_lastname'];
                     
                     $req = $bdd->prepare('SELECT series.SERIES_NAME, series.NETWORK, series.STARTDATE, series.ENDDATE, 
-                        p1.FIRSTNAME AS taskmaster_firstname, p1.LASTNAME AS taskmaster_lastname,
-                        p2.FIRSTNAME AS assistant_firstname, p2.LASTNAME AS assistant_lastname,
-                        p3.FIRSTNAME AS champion_firstname, p3.LASTNAME AS champion_lastname
+                        taskmaster.FIRSTNAME AS taskmaster_firstname, taskmaster.LASTNAME AS taskmaster_lastname,
+                        assistant.FIRSTNAME AS assistant_firstname, assistant.LASTNAME AS assistant_lastname,
+                        champion.FIRSTNAME AS champion_firstname, champion.LASTNAME AS champion_lastname
                         FROM series 
-                        LEFT JOIN taskmaster ON series.TASKMASTER_ID = taskmaster.ID 
-                        LEFT JOIN assistant ON series.ASSISTANT_ID = assistant.ID 
-                        LEFT JOIN candidate ON series.CHAMPION_ID = candidate.ID 
-                        LEFT JOIN person p1 ON taskmaster.ID = p1.ID
-                        LEFT JOIN person p2 ON assistant.ID = p2.ID
-                        LEFT JOIN person p3 ON candidate.ID = p3.ID
+                        LEFT JOIN person taskmaster ON series.TASKMASTER_ID = taskmaster.ID
+                        LEFT JOIN person assistant ON series.ASSISTANT_ID = assistant.ID
+                        LEFT JOIN person champion ON series.CHAMPION_ID  = champion.ID
                         WHERE series.SERIES_NAME = :series_name 
                             OR series.NETWORK = :network 
                             OR series.STARTDATE = :startdate 
                             OR series.ENDDATE = :enddate 
-                            OR (p1.FIRSTNAME = :taskmaster OR p1.LASTNAME = :taskmaster)
-                            OR (p2.FIRSTNAME = :assistant OR p2.LASTNAME = :assistant)
-                            OR (p3.FIRSTNAME = :champion OR p3.LASTNAME = :champion);
+                            OR (taskmaster.FIRSTNAME = :taskmaster_firstname OR taskmaster.LASTNAME = :taskmaster_lastname)
+                            OR (assistant.FIRSTNAME = :assistant_firstname OR assistant.LASTNAME = :assistant_lastname)
+                            OR (champion.FIRSTNAME = :champion_firstname OR champion.LASTNAME = :champion_lastname);
                     ');
                     
                     $req->execute(array(
@@ -130,9 +136,12 @@
                         'network' => $network,
                         'startdate' => $startdate,
                         'enddate' => $enddate,
-                        'taskmaster' => $taskmaster,
-                        'assistant' => $assistant,
-                        'champion' => $champion
+                        'taskmaster_firstname' => $taskmaster_firstname,
+                        'taskmaster_lastname' => $taskmaster_lastname,
+                        'assistant_firstname' => $assistant_firstname,
+                        'assistant_lastname' => $assistant_lastname,
+                        'champion_firstname' => $champion_firstname,
+                        'champion_lastname' => $champion_lastname
                     ));
 
                     if ($req != NULL && $req->rowCount() > 0) {
@@ -161,10 +170,84 @@
 
         </div>
 
+
         <div class="container d-flex flex-column align-items-center card shadow rounded-2 mt-8 mx-auto custom-bg-color p-5 pt-4 mt-4">
             <h1>Sélectionner des épisodes</h1>
             <form method="post" action="tables.php">
+                <p>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" style="width: 300px;" placeholder="Nom de la série" name="series_name2">
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" style="width: 400px;" placeholder="Numéro de l'épisode" name="episode_number">
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" style="width: 400px;" placeholder="Titre" name="title">
+                    </div>
+                    <div class="input-group mb-3">
+                        <input data-provide="datepicker" data-date-format="yyyy-mm-dd" class="form-control" style="width: 400px;" placeholder="Date de diffusion" name="airdate">
+                    </div>
+                    <div class="input-group mb-3">
+                    <label for="champion_firstname" style="width: 105px;" class="input-group-text">Gagnant:</label>
+                        <input type="text" class="form-control" style="width: 200px;" placeholder="Prénom" name="winner_firstname">
+                        <input type="text" class="form-control" style="width: 200px;" placeholder="Nom" name="winner_lastname">
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn custom-btn">Envoyer</button>
+                    </div>
+                    
+                </p>
             </form>
+            <?php
+                if (isset($_POST['series_name2']) || isset($_POST['episode']) || isset($_POST['title']) || isset($_POST['airdate']) || isset($_POST['winner_firstname']) || isset($_POST['winner_lastname'])){
+                    $seriesName = $_POST['series_name2'];
+                    $episodeNumber = $_POST['episode_number'];
+                    $title = $_POST['title'];
+                    $airdate = date('Y-m-d', strtotime($_POST['airdate']));
+                    $winnerFirstname = $_POST['winner_firstname'];
+                    $winnerLastname = $_POST['winner_lastname'];
+                    
+                    $req = $bdd->prepare('SELECT episode.SERIES_NAME, episode.EPISODE_NUMBER, episode.TITLE, episode.AIRDATE, 
+                        winner.FIRSTNAME AS winner_firstname, winner.LASTNAME AS winner_lastname
+                        FROM episode
+                        LEFT JOIN person winner ON episode.WINNER_ID = winner.ID
+                        WHERE episode.SERIES_NAME = :series_name2 
+                            OR episode.EPISODE_NUMBER = :episode_number 
+                            OR episode.TITLE = :title
+                            OR episode.AIRDATE = :airdate 
+                            OR (winner.FIRSTNAME = :winner_firstname OR winner.LASTNAME = :winner_lastname)
+                    ');
+                    
+                    $req->execute(array(
+                        'series_name2' => $seriesName,
+                        'episode_number' => $episodeNumber,
+                        'title' => $title,
+                        'airdate' => $airdate,
+                        'winner_firstname' => $winnerFirstname,
+                        'winner_lastname' => $winnerLastname
+                    ));
+
+                    if ($req != NULL && $req->rowCount() > 0) {
+                        echo "<div class='table-responsive mt-3'>";
+                        echo "<table class='table table-bordered table-hover'>";
+                        echo "<thead><tr><th>Série</th><th>Episode</th><th>Titre</th><th>Date de diffusion</th><th>Gagnant</th></tr></thead>";
+                        echo "<tbody>";
+                        while ($tuple = $req->fetch()) {
+                            echo "<tr>";
+                            echo "<td>" . $tuple['SERIES_NAME'] . "</td>";
+                            echo "<td>" . $tuple['EPISODE_NUMBER'] . "</td>";
+                            echo "<td>" . $tuple['TITLE'] . "</td>";
+                            echo "<td>" . $tuple['AIRDATE'] . "</td>";
+                            echo "<td>" . $tuple['winner_firstname'] . " " . $tuple['winner_lastname'] . "</td>";
+                            echo "</tr>";
+                        }
+                        echo "</tbody></table></div>";
+                    } else {
+                        echo "<div class='error-box'>Aucun résultat trouvé pour les critères de recherche spécifiés</div>";
+                    }
+                }
+                
+            ?>
         </div>
     </body>
 </html>
