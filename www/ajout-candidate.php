@@ -19,7 +19,7 @@ $bdd = new PDO('mysql:host=db;dbname=group9;charset=utf8', 'group9', 'tabodi');
             </div>
 
             <div class="form-group">
-                <textarea id="job" name="text" class="form-control"placeholder="Métiers (un par ligne)" rows="5"></textarea>
+                <textarea id="job" name="job" class="form-control"placeholder="Métiers (un par ligne)" rows="5"></textarea>
             </div>
 
             <div class="d-grid gap-2 mt-3">
@@ -34,51 +34,42 @@ $bdd = new PDO('mysql:host=db;dbname=group9;charset=utf8', 'group9', 'tabodi');
 <?php
 
 // Vérifier si le formulaire a été soumis
-if (isset($_POST['prenomNom']) && isset($_POST['text'])) {
-    $prenomNom = trim($_POST['prenomNom']);
-    $job = explode("\n", trim($_POST['text']));
+if (isset($_POST['firstname'], $_POST['lastname'], $_POST['job'])) {
+    $firstname = $_POST['firstname'];
+    $lastname = $_POST['lastname'];
+    $job = explode("\n", trim($_POST['job']));
     $job = array_map('trim', $job);
     $job = array_filter($job);
 
     // Vérifier si au moins un métier est saisi
-        if (!empty($job)) {
+    if (!empty($job)) {
 
-            // Vérifier si le candidat existe déjà
-            $req = $bdd->prepare("SELECT * FROM candidate WHERE prenomNom = :prenomNom");
-            $req->bindParam(':prenomNom', $prenomNom);
+        // Insérer le candidat dans la table Person
+        $req = $bdd->prepare("INSERT INTO person (firstname, lastname) VALUES (:firstname, :lastname)");
+        $req->bindParam(':firstname', $firstname);
+        $req->bindParam(':lastname', $lastname);
+        $req->execute();
+
+        // Récupérer l'ID du nouveau candidat
+        $candidate_Id = $bdd->lastInsertId();
+
+        // Insérer les métiers du candidat dans la table job
+        foreach ($job as $metier) {
+            $req = $bdd->prepare("INSERT INTO job (candidate_id, job) VALUES (:candidate_Id, :job)");
+            $req->bindParam(':candidate_Id', $candidate_Id);
+            $req->bindParam(':job', $metier);
             $req->execute();
-            $existing_candidate = $req->fetch();
-
-            if ($existing_candidate) {
-                // Récupérer l'ID du candidat existant
-                $candidate_Id = $existing_candidate['ID'];
-            } else {
-                // Ajouter un nouveau candidat à la base de données
-                $req = $bdd->prepare("INSERT INTO candidate (prenomNom) VALUES (:prenomNom)");
-                $req->bindParam(':prenomNom', $prenomNom);
-                $req->execute();
-                // Récupérer l'ID du nouveau candidat
-                $candidate_Id = $bdd->lastInsertId();
-            }
-
-            // Insérer les métiers du candidat dans la table job
-            foreach ($job as $metier) {
-                $req = $bdd->prepare("INSERT INTO job (CANDIDATE_ID, JOB) VALUES (:candidate_Id, :job)");
-                $req->bindParam(':candidate_Id', $candidate_Id);
-                $req->bindParam(':job', $metier);
-                $req->execute();
-            }
-
-            // Afficher la liste des métiers
-            echo '<ul>';
-            foreach ($job as $metier) {
-                echo '<li>' . $metier . '</li>';
-            }
-            echo '</ul>';
-
-        }else {
-            echo '<p>saisir au moins un métier.</p>';
         }
 
+        // Afficher la liste des métiers
+        echo '<ul>';
+        foreach ($job as $metier) {
+            echo '<li>' . $metier . '</li>';
+        }
+        echo '</ul>';
+
+    } else {
+        echo '<p>Saisir au moins un métier.</p>';
     }
+}
 ?>
