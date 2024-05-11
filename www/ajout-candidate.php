@@ -35,7 +35,7 @@ $bdd = new PDO('mysql:host=db;dbname=group9;charset=utf8', 'group9', 'tabodi');
 <?php
 
 // Vérifier si le formulaire a été soumis
-if (isset($_POST['firstname'], $_POST['lastname'], $_POST['job'])) {
+if (isset($_POST['firstname'])&& isset($_POST['lastname'])&& isset($_POST['job'])) {
     $firstname = $_POST['firstname'];
     $lastname = $_POST['lastname'];
     $job = explode("\n", trim($_POST['job']));
