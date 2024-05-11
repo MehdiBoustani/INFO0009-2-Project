@@ -11,13 +11,20 @@ $bdd = new PDO('mysql:host=db;dbname=group9;charset=utf8', 'group9', 'tabodi');
     <div class="container d-flex flex-column align-items-center card shadow rounded-2 mt-8 mx-auto custom-bg-color p-5 pt-4 mt-4">
         <h1>Ajout de candidat</h1>
         <form method="post" action="ajout-candidate.php">
-            <label for="prenomNom">Prénom et nom:</label>
-            <input type="text" id ="prenomNom" name="prenomNom" required>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" style="width: 400px;" placeholder="Prénom" name="firstname">
+            </div>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" style="width: 400px;" placeholder="Nom" name="lastname">
+            </div>
 
-            <label for="job">Métiers (un par ligne):</label>
-            <textarea id ="job" name="text" rows="5"></textarea>
+            <div class="form-group">
+                <textarea id="job" name="text" class="form-control"placeholder="Métiers (un par ligne)" rows="5"></textarea>
+            </div>
 
-            <input type="submit" value="Soumettre">
+            <div class="d-grid gap-2 mt-3">
+                <button type="submit" class="btn custom-btn">Soumettre</button>
+            </div>
         </form>
     </div>
 </body>
@@ -72,9 +79,6 @@ if (isset($_POST['prenomNom']) && isset($_POST['text'])) {
         }else {
             echo '<p>saisir au moins un métier.</p>';
         }
-}else {
-        echo '<p>saisir le prénom et le nom du candidat ainsi que ses métiers.</p>';
-}
 
-
+    }
 ?>
