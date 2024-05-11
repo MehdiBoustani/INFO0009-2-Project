@@ -45,17 +45,18 @@ if (isset($_POST['firstname'], $_POST['lastname'], $_POST['job'])) {
     if (!empty($job)) {
 
         // Insérer le candidat dans la table Person
-        $req = $bdd->prepare("INSERT INTO person (firstname, lastname) VALUES (:firstname, :lastname)");
+        $req = $bdd->prepare("INSERT INTO person (FIRSTNAME, LASTNAME) VALUES (:firstname, :lastname)");
         $req->bindParam(':firstname', $firstname);
         $req->bindParam(':lastname', $lastname);
         $req->execute();
+                  
 
         // Récupérer l'ID du nouveau candidat
         $candidate_Id = $bdd->lastInsertId();
 
         // Insérer les métiers du candidat dans la table job
         foreach ($job as $metier) {
-            $req = $bdd->prepare("INSERT INTO job (candidate_id, job) VALUES (:candidate_Id, :job)");
+            $req = $bdd->prepare("INSERT INTO job (CANDIDATE_ID,JOB) VALUES (:candidate_Id, :job)");
             $req->bindParam(':candidate_Id', $candidate_Id);
             $req->bindParam(':job', $metier);
             $req->execute();

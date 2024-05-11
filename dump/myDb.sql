@@ -13,11 +13,9 @@ SET time_zone = "+00:00";
 -- -------------------------------------------------------------------------------------------------------------------------------
 -- Création de la table 'person'
 CREATE TABLE IF NOT EXISTS `person` (
-  `ID` int NOT NULL,
+  `ID` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `FIRSTNAME` varchar(15) NOT NULL,
-  `LASTNAME` varchar(15) NOT NULL,
-
-  PRIMARY KEY (ID)
+  `LASTNAME` varchar(15) NOT NULL
 
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
@@ -54,6 +52,7 @@ LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/CANDIDATE.CSV' INTO TABLE `can
 -- -------------------------------------------------------------------------------------------------------------------------------
 -- Création de la table 'job'
 CREATE TABLE IF NOT EXISTS `job` (
+  
   `CANDIDATE_ID` int NOT NULL,
   `JOB` varchar(50) NOT NULL,
 
