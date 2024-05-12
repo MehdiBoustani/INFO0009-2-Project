@@ -10,7 +10,7 @@
                     
         ?>
         <div class="container d-flex flex-column align-items-center card shadow rounded-2 mt-8 mx-auto custom-bg-color p-5 pt-4 mt-4">
-            <h1>Sélectionner des personnes</h1>
+            <h2>Sélectionner des personnes</h2>
             <?php
                 if (isset($_POST['firstname']) || isset($_POST['lastname'])):
                     $firstname = $_POST['firstname'];
@@ -61,7 +61,7 @@
         </div>
 
         <div class="container d-flex flex-column align-items-center card shadow rounded-2 mt-8 mx-auto custom-bg-color p-5 pt-4 mt-4">
-            <h1>Sélectionner des séries</h1>
+            <h2>Sélectionner des séries</h2>
             
             <form method="post" action="tables.php">
                 <p>
@@ -172,7 +172,7 @@
 
 
         <div class="container d-flex flex-column align-items-center card shadow rounded-2 mt-8 mx-auto custom-bg-color p-5 pt-4 mt-4">
-            <h1>Sélectionner des épisodes</h1>
+            <h2>Sélectionner des épisodes</h2>
             <form method="post" action="tables.php">
                 <p>
                     <div class="input-group mb-3">

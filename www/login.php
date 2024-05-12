@@ -33,7 +33,7 @@
                     <button type="submit" class="btn btn-block custom-btn" style="width: 380px;">Déconnexion</button>
                 </form>
             <?php else: ?>
-                <h1>Se connecter</h1>
+                <h2>Se connecter</h2>
                 <form method="post" action="login.php">
                     <div class="input-group mb-3">
                         <input type="text" class="form-control" style="width: 350px;" placeholder="Nom d'utilisateur" name="login" required>
@@ -41,6 +41,7 @@
                     <div class="input-group mb-3">
                         <input type="password" class="form-control" style="width: 350px;" placeholder="Mot de passe" name="pass" required>
                     </div>
+                    
                     <div class="d-grid gap-2 mx-auto">
                         <button type="submit" class="btn btn-block custom-btn" style="width: 380px;">Connexion</button>
                     </div>

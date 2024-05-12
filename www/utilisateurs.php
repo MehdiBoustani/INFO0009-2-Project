@@ -11,7 +11,7 @@
     ?>
     <body>
         <div class="container d-flex flex-column align-items-center shadow rounded-2 mt-8 mx-auto custom-bg-color p-5 pt-4 mt-4">
-            <h1>Utilisateurs</h1>
+            <h2>Utilisateurs</h2>
             <?php
             /*$req contient les tuples de la requête*/
             $req = $bdd->query('SELECT * FROM users');

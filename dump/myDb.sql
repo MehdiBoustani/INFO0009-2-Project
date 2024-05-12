@@ -10,6 +10,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */
 ;
 
+GRANT FILE ON *.* TO 'group9'@'%';
 -- -------------------------------------------------------------------------------------------------------------------------------
 -- Création de la table 'person'
 CREATE TABLE IF NOT EXISTS `person` (
@@ -331,4 +332,3 @@ COMMIT;
 ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */
 ;
-/*test
