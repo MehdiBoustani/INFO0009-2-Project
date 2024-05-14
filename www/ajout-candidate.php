@@ -1,66 +1,58 @@
 <?php
-session_start();
-include 'header.html';
-include 'navbar.php';
+    session_start();
+    include 'header.html';
+    include 'navbar.php';
 
-// Database connection
-$bdd = new PDO('mysql:host=db;dbname=group9;charset=utf8', 'group9', 'tabodi');
+    // Database connection
+    $bdd = new PDO('mysql:host=db;dbname=group9;charset=utf8', 'group9', 'tabodi');
 
-// Vérifier si le formulaire a été soumis
-if (isset($_POST['firstname'])&& isset($_POST['lastname'])&& isset($_POST['job'])) {
-    $firstname = $_POST['firstname'];
-    $lastname = $_POST['lastname'];
-    $job = explode("\n", trim($_POST['job']));
-    $job = array_map('trim', $job);
-    $job = array_filter($job);
+    // Vérifier si le formulaire a été soumis
+    if (isset($_POST['firstname'])&& isset($_POST['lastname'])&& isset($_POST['job'])) {
+        $firstname = $_POST['firstname'];
+        $lastname = $_POST['lastname'];
+        $job = explode("\n", trim($_POST['job']));
+        $job = array_map('trim', $job);
+        $job = array_filter($job);
 
-    // Vérifier si au moins un métier est saisi
-    if (!empty($job)) {
+        // Vérifier si au moins un métier est saisi
+        if (!empty($job)) {
 
-        // Vérifier si le candidat existe déjà dans la table Person
-        $req = $bdd->prepare("SELECT ID FROM person WHERE FIRSTNAME = :firstname AND LASTNAME = :lastname");
-        $req->bindParam(':firstname', $firstname);
-        $req->bindParam(':lastname', $lastname);
-        $req->execute();
-
-        if ($req->rowCount() > 0) {
-            // Le candidat existe déjà, afficher un message approprié
-            echo '<p>Le candidat avec le même prénom et nom existe déjà dans la base de données.</p>';
-        } else {
-            
-            // Insérer le nom et le prénom du candidat dans la table Person
-            $req = $bdd->prepare("INSERT INTO person (FIRSTNAME, LASTNAME) VALUES (:firstname, :lastname)");
+            // Vérifier si le candidat existe déjà dans la table Person
+            $req = $bdd->prepare("SELECT ID FROM person WHERE FIRSTNAME = :firstname AND LASTNAME = :lastname");
             $req->bindParam(':firstname', $firstname);
             $req->bindParam(':lastname', $lastname);
             $req->execute();
 
-            // Récupérer l'ID du nouveau candidat
-            $candidate_Id = $bdd->lastInsertId();
-            $req = $bdd->prepare("INSERT INTO candidate (ID) VALUES (:id)");
-            $req->bindParam(':id', $candidate_Id);
-            $req->execute();
-
-
-            // Insérer les métiers du candidat dans la table job avec le même ID
-            foreach ($job as $metier) {
-                $req = $bdd->prepare("INSERT INTO job (CANDIDATE_ID, JOB) VALUES (:candidate_Id, :job)");
-                $req->bindParam(':candidate_Id', $candidate_Id);
-                $req->bindParam(':job', $metier);
+            if ($req->rowCount() > 0) {
+                // Le candidat existe déjà, afficher un message approprié
+                echo '<p>Le candidat avec le même prénom et nom existe déjà dans la base de données.</p>';
+            } else {
+                
+                // Insérer le nom et le prénom du candidat dans la table Person
+                $req = $bdd->prepare("INSERT INTO person (FIRSTNAME, LASTNAME) VALUES (:firstname, :lastname)");
+                $req->bindParam(':firstname', $firstname);
+                $req->bindParam(':lastname', $lastname);
                 $req->execute();
+
+                // Récupérer l'ID du nouveau candidat
+                $candidate_Id = $bdd->lastInsertId();
+                $req = $bdd->prepare("INSERT INTO candidate (ID) VALUES (:id)");
+                $req->bindParam(':id', $candidate_Id);
+                $req->execute();
+
+                // Insérer les métiers du candidat dans la table job avec le même ID
+                foreach ($job as $metier) {
+                    $req = $bdd->prepare("INSERT INTO job (CANDIDATE_ID, JOB) VALUES (:candidate_Id, :job)");
+                    $req->bindParam(':candidate_Id', $candidate_Id);
+                    $req->bindParam(':job', $metier);
+                    $req->execute();
+                }
             }
 
-            // Afficher la liste des métiers
-            echo '<ul>';
-            foreach ($job as $metier) {
-                echo '<li>' . $metier . '</li>';
-            }
-            echo '</ul>';
+        } else {
+            echo '<p>Saisir au moins un métier.</p>';
         }
-
-    } else {
-        echo '<p>Saisir au moins un métier.</p>';
     }
-}
 ?>
 
 <body>

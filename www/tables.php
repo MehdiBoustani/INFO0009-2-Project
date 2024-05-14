@@ -165,12 +165,8 @@
                         echo "<div class='error-box'>Aucun résultat trouvé pour les critères de recherche spécifiés</div>";
                     }
                 }
-                
             ?>
-
         </div>
-
-
         <div class="container d-flex flex-column align-items-center card shadow rounded-2 mt-8 mx-auto custom-bg-color p-5 pt-4 mt-4">
             <h2>Sélectionner des épisodes</h2>
             <form method="post" action="tables.php">
@@ -210,12 +206,13 @@
                     $req = $bdd->prepare('SELECT episode.SERIES_NAME, episode.EPISODE_NUMBER, episode.TITLE, episode.AIRDATE, 
                         winner.FIRSTNAME AS winner_firstname, winner.LASTNAME AS winner_lastname
                         FROM episode
-                        LEFT JOIN person winner ON episode.WINNER_ID = winner.ID
+                        INNER JOIN person winner ON episode.WINNER_ID = winner.ID
                         WHERE episode.SERIES_NAME = :series_name2 
                             OR episode.EPISODE_NUMBER = :episode_number 
                             OR episode.TITLE = :title
                             OR episode.AIRDATE = :airdate 
                             OR (winner.FIRSTNAME = :winner_firstname OR winner.LASTNAME = :winner_lastname)
+                        ORDER BY episode.EPISODE_NUMBER
                     ');
                     
                     $req->execute(array(

@@ -32,15 +32,15 @@
 
 <?php
     if (isset($_POST['title'])) {
-        $title = $_POST['title'];
+        $titleSelected = $_POST['title'];
 
-        // Prepare the SQL query
+        // On fait un joint à gauche pour avoir tous les élements de l'épisode ainsi que du nom et prénom du gagnant
         $req = $bdd->prepare('SELECT episode.*, person.FIRSTNAME AS WINNER_FIRSTNAME, person.LASTNAME AS WINNER_LASTNAME
                             FROM episode 
                             LEFT JOIN person ON episode.WINNER_ID = person.ID 
                             WHERE episode.TITLE = :title');
         
-        $req->bindParam(':title', $title, PDO::PARAM_STR);
+        $req->bindParam(':title', $titleSelected, PDO::PARAM_STR);
         $req->execute();
 
         if ($req->rowCount() <= 0) {
@@ -48,96 +48,177 @@
         } else {
             $tuple = $req->fetch();
 
-            if (
-                isset($_POST['series_name']) && $_POST['series_name'] !== $tuple['SERIES_NAME'] ||
-                isset($_POST['episode_number']) && $_POST['episode_number'] !== $tuple['EPISODE_NUMBER'] ||
-                isset($_POST['new_title']) && $_POST['new_title'] !== $tuple['TITLE'] ||
-                isset($_POST['airdate']) && $_POST['airdate'] !== $tuple['AIRDATE'] ||
-                isset($_POST['winner_firstname']) && $_POST['winner_firstname'] !== $tuple['WINNER_FIRSTNAME'] ||
-                isset($_POST['winner_lastname']) && $_POST['winner_lastname'] !== $tuple['WINNER_LASTNAME']
-            ){
-                $seriesName = $_POST['series_name'];
-                $episodeNumber = $_POST['episode_number'];
-                $newTitle = $_POST['new_title'];
-                $airdate = date('Y-m-d', strtotime($_POST['airdate']));
-                $winnerFirstname = $_POST['winner_firstname'];
-                $winnerLastname = $_POST['winner_lastname'];
-    
-                // Check if the winner exists in the person table
-                $req_person = $bdd->prepare('SELECT ID FROM person WHERE FIRSTNAME = :winner_firstname AND LASTNAME = :winner_lastname');
+            $newTitle = isset($_POST['new_title']) ? $_POST['new_title'] : $tuple['TITLE'];
+            $airdate = isset($_POST['airdate']) ? date('Y-m-d', strtotime($_POST['airdate'])) : $tuple['AIRDATE'];
+            $winnerFirstname = isset($_POST['winner_firstname']) ? $_POST['winner_firstname'] : $tuple['WINNER_FIRSTNAME'];
+            $winnerLastname = isset($_POST['winner_lastname']) ? $_POST['winner_lastname'] : $tuple['WINNER_LASTNAME'];
+
+            // Vérification si au moins une valeur est différente
+            $fieldsChanged = (
+                $newTitle !== $tuple['TITLE'] ||
+                $airdate !== $tuple['AIRDATE']
+            );
+
+            if ($fieldsChanged) {
+
+                $req2 = $bdd->prepare('UPDATE episode SET TITLE = :new_title, AIRDATE = :airdate WHERE TITLE = :title');
+
+                $req2->execute(array(
+                    'new_title' => $newTitle,
+                    'airdate' => $airdate,
+                    'title' => $titleSelected
+                ));
+
+                if ($req2->errorCode() === "00000") {
+                    echo "<div class='success-box mt-2''>L'épisode a été mis à jour avec succès.</div>";
+                } else {
+                    $errorInfo = $req2->errorInfo();
+                    echo "<div class='error-box mt-2''>Une erreur s'est produite lors de la mise à jour des informations : {$errorInfo[2]}</div>";
+                }
+            }
+
+            $fieldsChanged2 = (
+                $winnerFirstname !== $tuple['WINNER_FIRSTNAME'] ||
+                $winnerLastname !== $tuple['WINNER_LASTNAME']
+            );
+                
+            if($fieldsChanged2){
+
+                // On sélectionne les noms et prénoms de tous les candidats
+                $req_person = $bdd->prepare('SELECT ID FROM candidate NATURAL JOIN person WHERE FIRSTNAME = :winner_firstname AND LASTNAME = :winner_lastname');
                 $req_person->execute(array(
                     'winner_firstname' => $winnerFirstname,
                     'winner_lastname' => $winnerLastname
                 ));
+                
                 $person_id = $req_person->fetchColumn();
     
-                // If the winner does not exist, insert them into the person table
+                // Si le gagnant n'existe pas, on renvoie une erreur
                 if (!$person_id) {
-                    $req_insert_person = $bdd->prepare('INSERT INTO person (FIRSTNAME, LASTNAME) VALUES (:winner_firstname, :winner_lastname)');
-                    $req_insert_person->execute(array(
+                    echo "<div class='error-box mt-2''>Le candidat spécifié n'existe pas dans la base de donnée. Pour être défini en tant que gagnant de cet épisode, un candidat doit remplir l'un des critères suivants :
+                        <ul>
+                            <li>Avoir le plus de points accumulés.</li>
+                            <li>Gagner une tâche d'égalité spécifique à cet épisode.</li>
+                        </ul>
+                        <form method='get' action='ajout-candidate.php'>
+                            <button type='submit' class='btn custom-btn'>Créer un candidat ?</button>
+                        </form>
+
+                        </div>
+                        ";
+                }
+
+                else{
+                    $req_winner = $bdd->prepare('
+                        SELECT DISTINCT person.ID
+                        FROM person
+                        INNER JOIN points ON points.CANDIDATE_ID = person.ID
+                        LEFT JOIN tiebreakerresult ON tiebreakerresult.CANDIDATE_ID = person.ID
+                        WHERE person.FIRSTNAME = :winner_firstname
+                            AND person.LASTNAME = :winner_lastname
+                            AND (
+                                (SELECT SUM(p.POINTS) 
+                                FROM points p
+                                WHERE p.CANDIDATE_ID = person.ID 
+                                    AND p.EPISODE_NUMBER = :episode_number
+                                    AND p.SERIES_NAME = :series_name
+                                ) >= (
+                                    SELECT MAX(total_points) 
+                                    FROM (
+                                        SELECT SUM(p.POINTS) AS total_points
+                                        FROM points p
+                                        WHERE p.EPISODE_NUMBER = :episode_number
+                                            AND p.SERIES_NAME = :series_name
+                                        GROUP BY p.CANDIDATE_ID
+                                    ) AS subquery
+                                )
+                                OR (
+                                    tiebreakerresult.CANDIDATE_ID = person.ID
+                                    AND tiebreakerresult.EPISODE_NUMBER = :episode_number
+                                    AND tiebreakerresult.WON = 1 
+                                    AND points.SERIES_NAME = :series_name
+                                )
+                            )
+                    ');
+                    $req_winner->execute(array(
                         'winner_firstname' => $winnerFirstname,
-                        'winner_lastname' => $winnerLastname
+                        'winner_lastname' => $winnerLastname,
+                        'episode_number' => $tuple['EPISODE_NUMBER'],
+                        'series_name' => $tuple['SERIES_NAME']
                     ));
-    
-                    // Retrieve the ID of the new person
-                    $person_id = $bdd->lastInsertId();
+
+
+                    $win = $req_winner->fetchColumn();
+
+                    if($win){
+                        $req_updateWinner = $bdd->prepare('UPDATE episode SET WINNER_ID = :winner_id WHERE TITLE = :title');
+                        $req_updateWinner->execute(array(
+                            'winner_id' => $person_id,
+                            'title' => $titleSelected,
+
+                        ));
+                        if($req_updateWinner->rowCount() >= 0){
+                            echo "<div class='success-box mt-2'>Le gagnant de cette épisode a bien été mis à jour.</div>";
+                        }
+                    }
+                    else{
+                        echo "<div class='error-box mt-2'>Le candidat spécifié n'est pas un gagnant valide.</div>";
+                    }
                 }
-    
-                $req2 = $bdd->prepare('UPDATE episode SET SERIES_NAME = :series_name, EPISODE_NUMBER = :episode_number, 
-                TITLE = :new_title, AIRDATE = :airdate, WINNER_ID = :winner_id WHERE TITLE = :title');
-    
-                $req2->execute(array(
-                    'series_name' => $seriesName,
-                    'episode_number' => $episodeNumber,
-                    'new_title' => $newTitle,
-                    'airdate' => $airdate,
-                    'winner_id' => $person_id,
-                    'new_title' => $title
-                ));
-    
-                if ($req2 != NULL && $req2->rowCount() > 0) {
-                    echo "<div class='success-box'>Les informations ont été mises à jour avec succès.</div>";
-                } else {
-                    echo "<div class='error-box'>Une erreur s'est produite lors de la mise à jour des informations.</div>";
-                }
+                
             }
-            
-            echo "<div class='container d-flex flex-column align-items-center card shadow rounded-2 mt-8 mx-auto custom-bg-color p-5 pt-4 mt-4'>";
-            echo "<h2>Mettre à jour les informations de l'épisode</h2>";
-            echo "<form method='post' action='episode.php'>";
-            echo "<table class='table table-bordered mt-3'>";
-            echo "<thead><tr><th>Série</th><th>Episode</th><th>Titre</th><th>Date de diffusion</th></tr></thead>";
-            echo "<tbody>";
-    
-            echo "<tr>";
-            echo "<td><input type='text' class='form-control' name='series_name' value='" . $tuple['SERIES_NAME'] . "'></td>";
-            echo "<td><input type='number' class='form-control' name='episode_number' value='" . $tuple['EPISODE_NUMBER'] . "' min='1'></td>";
-            echo "<td><input type='text' class='form-control' name='new_title' value='" . $tuple['TITLE'] . "'></td>";
-            echo "<td><input data-provide='datepicker' data-date-format='yyyy-mm-dd' class='form-control' name='airdate' value='" . $tuple['AIRDATE'] . "'></td>";
-            echo "</tr>";
-    
-            echo "</tbody></table>";
-            echo "<button type='submit' class='btn custom-btn'>Mettre à jour</button>";
-            echo "</form>";
-            echo "</div>";
+?>
+            <div class="container d-flex flex-column align-items-center card shadow rounded-2 mt-8 mx-auto custom-bg-color p-5 pt-4 mt-4">
+                <h2>Mettre à jour les informations de l'épisode</h2>
+                <form id="update_form" method='post' action='episode.php'>
+                    <table class='table table-bordered mt-3'>
+                        <caption>Seul le titre et la date de diffusion peuvent être mis à jour</caption>
+                        <thead>
+                            <tr>
+                                <th style="text-align: center;">Série</th>
+                                <th style="text-align: center;">Episode</th>
+                                <th style="text-align: center;">Titre</th>
+                                <th style="text-align: center;">Date de diffusion</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="vertical-align: middle;"><?php echo $tuple['SERIES_NAME']; ?></td>
+                                <td style="vertical-align: middle; text-align: center;"><?php echo $tuple['EPISODE_NUMBER']; ?></td>
+                                <td><input type='text' class='form-control' name='new_title' value="<?php echo $tuple['TITLE']; ?>"></td>
+                                <td><input data-provide='datepicker' data-date-format='yyyy-mm-dd' class='form-control' name='airdate' value="<?php echo $tuple['AIRDATE']; ?>"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <input type="hidden" name="title" value="<?php echo $titleSelected; ?>">
+                    
+                    <button type='submit' onClick="window.location.reload();" class='btn custom-btn'>Mettre à jour</button>
+                </form>
+            </div>
 
-            echo "<div class='container d-flex flex-column align-items-center card shadow rounded-2 mt-8 mx-auto custom-bg-color p-5 pt-4 mt-4'>";
-            echo "<h2>Définir ou mettre à jour le gagnant de l'épisode</h2>";
+            <div class='container d-flex flex-column align-items-center card shadow rounded-2 mt-8 mx-auto custom-bg-color p-5 pt-4 mt-4'>
+            <h2><?php echo ($tuple['WINNER_FIRSTNAME'] === null && $tuple['WINNER_LASTNAME'] === null) ? "Définir le gagnant de l'épisode" : "Mettre à jour le gagnant de l'épisode"; ?></h2>
+                <form method='post' action='episode.php'>
+                    <div class='input-group mb-3 mt-3'>
+                        <label for='winner_firstname' class='input-group-text' style='width: 85px;'>Prénom:</label>
+                        <input type='text' class='form-control' name='winner_firstname' style='width: 300px;' placeholder='Prénom' value='<?php echo $tuple['WINNER_FIRSTNAME'];?>'>
+                    </div>
 
-            echo "<form method='post' action='episode.php'>";
+                    <div class='input-group mb-3'>
+                        <label for='winner_lastname' class='input-group-text' style='width: 85px;'>Nom:</label>
+                        <input type='text' class='form-control' name='winner_lastname' style='width: 300px;' placeholder='Nom' value='<?php echo $tuple['WINNER_LASTNAME'];?>'>
+                    </div>
 
-            echo "<div class='input-group mb-3 mt-3'>";
-            echo "<label for='champion_firstname' class='input-group-text' style='width: 85px;'>Prénom:</label><input type='text' class='form-control' name='winner_firstname' style='width: 300px;' placeholder='Prénom' value='" . $tuple['WINNER_FIRSTNAME'] . "'> ";
-            echo "</div>";
+                    <input type="hidden" name="title" value="<?php echo $titleSelected; ?>">
 
-            echo "<div class='input-group mb-3'>";
-            echo "<label for='champion_lastname' class='input-group-text' style='width: 85px;'>Nom:</label><input type='text' class='form-control' name='winner_lastname' style='width: 300px;' placeholder='Nom' value='" . $tuple['WINNER_LASTNAME'] . "'>";
-            echo "</div>";
-
-            echo "<button type='submit' class='btn custom-btn'>Mettre à jour le gagnant</button>";
-            echo "</form>";
-            echo "</div>";
+                    <button type='submit' class='btn custom-btn'>
+                        <?php echo ($tuple['WINNER_FIRSTNAME'] === null && $tuple['WINNER_LASTNAME'] === null) ? "Définir le gagnant" : "Mettre à jour le gagnant"; ?>
+                    </button>
+                </form>
+            </div>
+<?php
         }
     }
+    
 ?>
 

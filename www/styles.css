@@ -34,13 +34,14 @@ body {
     border-radius: 5px;
 }
 
-.nice-box {
-    background-color: #ffebee;
-    color: #34a12a;
+.success-box {
+    background-color: #d0f0c0;
+    color: #347c36;
     padding: 10px;
     margin-bottom: 10px;
-    border: 1px solid #34a12a;
+    border: 1px solid #347c36;
     border-radius: 5px;
 }
+
 
 
