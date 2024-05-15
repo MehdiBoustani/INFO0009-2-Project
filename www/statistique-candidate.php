@@ -1,42 +1,18 @@
 <?php
-session_start();
-include 'header.html';
-include 'navbar.php';
+    session_start();
+    include 'header.html';
+    include 'navbar.php';
 
-// Database connection
-$bdd = new PDO('mysql:host=db;dbname=group9;charset=utf8', 'group9', 'tabodi');
-
-// Récupération des statistiques depuis la base de données
-$order_column = isset($_GET['order']) ? $_GET['order'] : 'Nom de la  Colonne de tri'; // Colonne de tri par défaut
-$req = $bdd->prepare('SELECT 
-                        person.FIRSTNAME, 
-                        person.LASTNAME,
-                        CONCAT(FORMAT((COUNT(CASE WHEN points.POINTS = 0 THEN 1 ELSE NULL END) / COUNT(*)) * 100, 2), \'%\') AS pecent_zero_points,
-                        CONCAT(FORMAT((COUNT(CASE WHEN points.POINTS = 1 THEN 1 ELSE NULL END) / COUNT(*)) * 100, 2), \'%\') AS pecent_one_points,
-                        CONCAT(FORMAT((COUNT(CASE WHEN points.POINTS = 2 THEN 1 ELSE NULL END) / COUNT(*)) * 100, 2), \'%\') AS pecent_two_points,
-                        CONCAT(FORMAT((COUNT(CASE WHEN points.POINTS = 3 THEN 1 ELSE NULL END) / COUNT(*)) * 100, 2), \'%\') AS pecent_three_points,
-                        CONCAT(FORMAT((COUNT(CASE WHEN points.POINTS = 4 THEN 1 ELSE NULL END) / COUNT(*)) * 100, 2), \'%\') AS pecent_four_points,
-                        CONCAT(FORMAT((COUNT(CASE WHEN points.POINTS = 5 THEN 1 ELSE NULL END) / COUNT(*)) * 100, 2), \'%\') AS pecent_five_points,
-                        ROUND(AVG(points.POINTS), 2) AS Moyenne
-                    FROM 
-                        person
-                    JOIN 
-                        points ON points.CANDIDATE_ID = person.ID
-                    GROUP BY 
-                        person.FIRSTNAME, 
-                        person.LASTNAME
-                    ORDER BY 
-                        ' . $order_column . ' ASC');
-$req->execute();
+    // Database connection
+    $bdd = new PDO('mysql:host=db;dbname=group9;charset=utf8', 'group9', 'tabodi');
 ?>
 
 <div class="container d-flex flex-column align-items-center card shadow rounded-2 mt-8 mx-auto custom-bg-color p-5 pt-4 mt-4">
     <h2>Statistiques des candidats</h2>
-    <p>Choisir la colonne de tri :</p>
     <form method="get" action="statistique-candidate.php">
         <div class="input-group mb-3 mt-2">
             <select class="form-select" style = "width: 300px;" name="order">
-                <option value="">Nom de la Colonne de tri</option>
+                <option value="">Nom de la colonne de tri</option>
                 <option value="Moyenne" <?php if ($order_column === 'Moyenne') echo 'selected'; ?>>Moyenne</option>
                 <option value="pecent_zero_points" <?php if ($order_column === 'pecent_zero_points') echo 'selected'; ?>>0 points</option>
                 <option value="pecent_one_points" <?php if ($order_column === 'pecent_one_points') echo 'selected'; ?>>1 point</option>
@@ -53,6 +29,33 @@ $req->execute();
         </div>
     </form>
 
+<?php
+    // Vérifier si un élément a été sélectionné
+    if(isset($_GET['order'])) {
+        // Récupération des statistiques depuis la base de données
+        $order_column = $_GET['order']; // Colonne de tri
+        $req = $bdd->prepare('SELECT 
+                                person.FIRSTNAME, 
+                                person.LASTNAME,
+                                COUNT(CASE WHEN points.POINTS = 0 THEN 1 ELSE NULL END) / COUNT(*) * 100 AS pecent_zero_points,
+                                COUNT(CASE WHEN points.POINTS = 1 THEN 1 ELSE NULL END) / COUNT(*) * 100 AS pecent_one_points,
+                                COUNT(CASE WHEN points.POINTS = 2 THEN 1 ELSE NULL END) / COUNT(*) * 100 AS pecent_two_points,
+                                COUNT(CASE WHEN points.POINTS = 3 THEN 1 ELSE NULL END) / COUNT(*) * 100 AS pecent_three_points,
+                                COUNT(CASE WHEN points.POINTS = 4 THEN 1 ELSE NULL END) / COUNT(*) * 100 AS pecent_four_points,
+                                COUNT(CASE WHEN points.POINTS = 5 THEN 1 ELSE NULL END) / COUNT(*) * 100 AS pecent_five_points,
+                                ROUND(AVG(points.POINTS), 2) AS Moyenne
+                            FROM 
+                                person
+                            JOIN 
+                                points ON points.CANDIDATE_ID = person.ID
+                            GROUP BY 
+                                person.FIRSTNAME, 
+                                person.LASTNAME
+                            ORDER BY 
+                                ' . $order_column . ' ASC');
+        $req->execute();
+    
+?>
     <table class="table table-bordered mt-3">
         <thead>
             <tr>
@@ -72,12 +75,12 @@ $req->execute();
                 <tr>
                     <td><?= $row['FIRSTNAME'] ?></td>
                     <td><?= $row['LASTNAME'] ?></td>
-                    <td><?= $row['pecent_zero_points'] ?></td>
-                    <td><?= $row['pecent_one_points'] ?></td>
-                    <td><?= $row['pecent_two_points'] ?></td>
-                    <td><?= $row['pecent_three_points'] ?></td>
-                    <td><?= $row['pecent_four_points'] ?></td>
-                    <td><?= $row['pecent_five_points'] ?></td>
+                    <td><?= number_format($row['pecent_zero_points'], 2) ?>%</td>
+                    <td><?= number_format($row['pecent_one_points'], 2) ?>%</td>
+                    <td><?= number_format($row['pecent_two_points'], 2) ?>%</td>
+                    <td><?= number_format($row['pecent_three_points'], 2) ?>%</td>
+                    <td><?= number_format($row['pecent_four_points'], 2) ?>%</td>
+                    <td><?= number_format($row['pecent_five_points'], 2) ?>%</td>
                     <td><?= $row['Moyenne'] ?></td>
                 </tr>
             <?php endwhile; ?>
@@ -85,3 +88,6 @@ $req->execute();
     </table>
 </div>
 
+<?php
+}
+?>
