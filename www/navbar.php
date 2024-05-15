@@ -20,8 +20,12 @@
                         <a class = "nav-link" href="./episode.php">Selection d'épisode</a>
                     </li>
                     <li class="nav-item">
+                        <a class = "nav-link" href="./statistique-candidate.php">Statistiques des candidats</a>
+                    </li>
+                    <li class="nav-item">
                         <a class = "nav-link" href="./totaux-glissants.php">Exemple totaux</a>
                     </li>
+                  
                 </ul>
             <?php endif; ?>
         </div>
