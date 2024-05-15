@@ -8,22 +8,22 @@
             <?php if(isset($_SESSION['login'])): ?>
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="./utilisateurs.php">Utilisateurs</a>
-                    </li>
-                    <li class="nav-item">
                         <a class = "nav-link" href="./tables.php">Selection de données</a>
                     </li>
                     <li class="nav-item">
                         <a class = "nav-link" href="./ajout-candidate.php">Ajout de candidat</a>
                     </li>
                     <li class="nav-item">
-                        <a class = "nav-link" href="./episode.php">Selection d'épisode</a>
+                        <a class = "nav-link" href="./episode.php">Modification d'épisode</a>
                     </li>
                     <li class="nav-item">
                         <a class = "nav-link" href="./statistique-candidate.php">Statistiques des candidats</a>
                     </li>
                     <li class="nav-item">
-                        <a class = "nav-link" href="./totaux-glissants.php">Exemple totaux</a>
+                        <a class = "nav-link" href="./table-points.php">Points par tâche pour un épisode</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class = "nav-link" href="./totaux-glissants.php">Totaux cumulatifs des candidats</a>
                     </li>
                   
                 </ul>

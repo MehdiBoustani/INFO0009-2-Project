@@ -3,7 +3,6 @@
     include 'header.html';
     include 'navbar.php';
 
-    // Database connection
     $bdd = new PDO('mysql:host=db;dbname=group9;charset=utf8', 'group9', 'tabodi');
 ?>
 
@@ -12,31 +11,29 @@
         <h2>Sélectionner un épisode</h2>
         <form method="post" action="episode.php">
             <div class="input-group mb-3 mt-2">
-            <select class="form-select" style="width: 300px;" name="title">
-                <option value="">Titre de l'épisode</option>
-                <?php
+                <select class="form-select" style="width: 300px;" name="title">
+                    <option value="">Titre de l'épisode</option>
+                    <?php
 
-                    $series_req = $bdd->query('SELECT SERIES_NAME FROM series ORDER BY SERIES_NAME');
+                        $series_req = $bdd->query('SELECT SERIES_NAME FROM series ORDER BY SERIES_NAME');
 
-                    while ($series_row = $series_req->fetch(PDO::FETCH_ASSOC)) {
-                        $series_name = $series_row['SERIES_NAME'];
-                        echo "<optgroup label='$series_name'>";
+                        while ($series_row = $series_req->fetch(PDO::FETCH_ASSOC)) {
+                            $series_name = $series_row['SERIES_NAME'];
+                            echo "<optgroup label='$series_name'>";
 
-                        // Requête pour obtenir les épisodes de cette série
-                        $episode_req = $bdd->prepare('SELECT TITLE, EPISODE_NUMBER FROM episode WHERE SERIES_NAME = ? ORDER BY SERIES_NAME');
-                        $episode_req->execute([$series_name]);
+                            // Requête pour obtenir les épisodes de cette série
+                            $episode_req = $bdd->prepare('SELECT TITLE, EPISODE_NUMBER FROM episode WHERE SERIES_NAME = ? ORDER BY SERIES_NAME');
+                            $episode_req->execute([$series_name]);
 
-                        // Boucle à travers chaque épisode de cette série
-                        while ($episode_row = $episode_req->fetch(PDO::FETCH_ASSOC)) {
-                            echo "<option value='" . $episode_row['TITLE'] . "'>" . $episode_row['EPISODE_NUMBER'] . " " . $episode_row['TITLE'] . "</option>";
+                            // Boucle à travers chaque épisode de cette série
+                            while ($episode_row = $episode_req->fetch(PDO::FETCH_ASSOC)) {
+                                echo "<option value='" . $episode_row['TITLE'] . "'>" . $episode_row['EPISODE_NUMBER'] . " " . $episode_row['TITLE'] . "</option>";
+                            }
+
+                            echo "</optgroup>";
                         }
-
-                        echo "</optgroup>";
-                    }
-                ?>
-            </select>
-
-
+                    ?>
+                </select>
             </div>
             <div class="d-grid gap-2">
                 <button type="submit" class="btn custom-btn">Envoyer</button>

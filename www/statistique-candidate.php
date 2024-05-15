@@ -3,11 +3,10 @@
     include 'header.html';
     include 'navbar.php';
 
-    // Database connection
     $bdd = new PDO('mysql:host=db;dbname=group9;charset=utf8', 'group9', 'tabodi');
 ?>
 
-<div class="container d-flex flex-column align-items-center card shadow rounded-2 mt-8 mx-auto custom-bg-color p-5 pt-4 mt-4">
+<div class="container d-flex flex-column align-items-center card shadow rounded-2 mt-8 mx-auto custom-bg-color p-5 pt-4 mt-4 mb-4">
     <h2>Statistiques des candidats</h2>
     <form method="get" action="statistique-candidate.php">
         <div class="input-group mb-3 mt-2">

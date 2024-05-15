@@ -6,25 +6,25 @@
 
 <body>
         <?php
-        if (isset($_POST['disconnect'])) {
-            session_unset();
-            echo '<script>window.location.replace("login.php");</script>';
-        }
-        
-        $bdd = new PDO('mysql:host=db;dbname=group9;charset=utf8', 'group9', 'tabodi');
-        if ($bdd == NULL)
-            echo "Problème de connexion";
-        if (isset($_POST["login"])) {
-            //Prepared statement to avoid sql injection
-            $req = $bdd->prepare("SELECT * FROM users WHERE Login = :login AND Pass = :pass", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
-            $req->execute(array('login' => $_POST["login"], 'pass' => $_POST["pass"]));
-            $tuple = $req->fetch();
-            if ($tuple) {
-                $_SESSION['login'] = $tuple["Login"];
-                echo '<script>window.location.replace("index.php");</script>';
-            } else
-                echo "<div class='error-box'>Votre login/mot de passe est incorrect</div>";
-        }
+            if (isset($_POST['disconnect'])) {
+                session_unset();
+                echo '<script>window.location.replace("login.php");</script>';
+            }
+            
+            $bdd = new PDO('mysql:host=db;dbname=group9;charset=utf8', 'group9', 'tabodi');
+            if ($bdd == NULL)
+                echo "Problème de connexion";
+            if (isset($_POST["login"])) {
+                //Prepared statement to avoid sql injection
+                $req = $bdd->prepare("SELECT * FROM users WHERE Login = :login AND Pass = :pass", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
+                $req->execute(array('login' => $_POST["login"], 'pass' => $_POST["pass"]));
+                $tuple = $req->fetch();
+                if ($tuple) {
+                    $_SESSION['login'] = $tuple["Login"];
+                    echo '<script>window.location.replace("index.php");</script>';
+                } else
+                    echo "<div class='error-box'>Votre login/mot de passe est incorrect</div>";
+            }
         ?>
         <div class="container d-flex flex-column align-items-center card shadow rounded-2 mt-8 mx-auto custom-bg-color p-5 pt-4 mt-4 text-center">
             <?php if (isset($_SESSION['login'])): ?>

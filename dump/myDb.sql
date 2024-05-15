@@ -235,19 +235,15 @@ CREATE TABLE IF NOT EXISTS `tiebreaker` (
   `SERIES_NAME` varchar(20) NOT NULL,
   `EPISODE_NUMBER` int NOT NULL,
   `TASK_NUMBER` int NOT NULL,
-  `WINNER_ID` int DEFAULT NULL,
-  `LOSER_ID` int DEFAULT NULL,
 
   PRIMARY KEY (SERIES_NAME, EPISODE_NUMBER, TASK_NUMBER),
 
-  FOREIGN KEY (SERIES_NAME, EPISODE_NUMBER, TASK_NUMBER) REFERENCES task (SERIES_NAME, EPISODE_NUMBER, TASK_NUMBER),
-  FOREIGN KEY (WINNER_ID) REFERENCES candidate (ID),
-  FOREIGN KEY (LOSER_ID) REFERENCES candidate (ID)
+  FOREIGN KEY (SERIES_NAME, EPISODE_NUMBER, TASK_NUMBER) REFERENCES task (SERIES_NAME, EPISODE_NUMBER, TASK_NUMBER) 
 
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
--- Chargement des données dans la table 'tiebreaker'
-LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/TIEBREAKER.CSV' INTO TABLE `tiebreaker` FIELDS TERMINATED BY ';'  IGNORE 1 ROWS;
+-- Chargement des données dans la table 'tiebreaker' -- On ignore WINNER_ID et LOSER_ID pour respecter l'énoncé --
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/TIEBREAKER.CSV' INTO TABLE `tiebreaker` FIELDS TERMINATED BY ';' IGNORE 1 ROWS (SERIES_NAME, EPISODE_NUMBER, TASK_NUMBER);
 -- -------------------------------------------------------------------------------------------------------------------------------
 
 -- -------------------------------------------------------------------------------------------------------------------------------
