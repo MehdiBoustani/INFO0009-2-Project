@@ -277,8 +277,9 @@
             $row = $req_episode_number->fetch(PDO::FETCH_ASSOC);
             $episode_number = ($row['max_episode_number'] !== null) ? $row['max_episode_number'] + 1 : 1;
 
-            if(isset($_POST['titles'])){
+            if(isset($_POST['titles']) && isset($_POST['airdates'])){
                 $titles = $_POST['titles'];
+                $airdates = $_POST['airdates'];
 
                 $req_episode = $bdd->prepare("INSERT INTO episode (SERIES_NAME, EPISODE_NUMBER, TITLE, AIRDATE) VALUES (:series_name2, :episode_number, :titles, :airdate)");
 
@@ -287,7 +288,7 @@
                         'series_name2' => $seriesName2,
                         'episode_number' => $episode_number + $i,
                         'titles' => $titles[$i],
-                        'airdate' => date('Y-m-d')
+                        'airdate' => date('Y-m-d', strtotime($airdates[$i]))
                     ));
 
                     if($req_episode->rowCount() <= 0){
@@ -310,6 +311,7 @@
                             <tr>
                                 <th style="text-align: center;">Numéro</th>
                                 <th style="text-align: center;">Titre de l'épisode</th>
+                                <th style="text-align: center;">Date de diffusion</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -317,6 +319,7 @@
                                 <tr>
                                     <td style="vertical-align: middle; text-align: center;"><?php echo $episode_number + $i; ?></td>
                                     <td><input type='text' class='form-control' name='titles[]' placeholder="Titre"></td>
+                                    <td><input data-provide="datepicker" data-date-format="yyyy-mm-dd" class="form-control" placeholder="Date" name="airdates[]"></td>
                                 </tr>
                             <?php } ?>
                         </tbody>
