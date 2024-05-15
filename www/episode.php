@@ -12,15 +12,31 @@
         <h2>Sélectionner un épisode</h2>
         <form method="post" action="episode.php">
             <div class="input-group mb-3 mt-2">
-                <select class="form-select" style = "width: 300px;" name="title">
-                    <option value="">Titre de l'épisode</option>
-                    <?php
-                        $req = $bdd->query('SELECT TITLE FROM episode');
-                        while ($row = $req->fetch(PDO::FETCH_ASSOC)) {
-                            echo "<option value='" . $row['TITLE'] . "'>" . $row['TITLE'] . "</option>";
+            <select class="form-select" style="width: 300px;" name="title">
+                <option value="">Titre de l'épisode</option>
+                <?php
+
+                    $series_req = $bdd->query('SELECT SERIES_NAME FROM series ORDER BY SERIES_NAME');
+
+                    while ($series_row = $series_req->fetch(PDO::FETCH_ASSOC)) {
+                        $series_name = $series_row['SERIES_NAME'];
+                        echo "<optgroup label='$series_name'>";
+
+                        // Requête pour obtenir les épisodes de cette série
+                        $episode_req = $bdd->prepare('SELECT TITLE, EPISODE_NUMBER FROM episode WHERE SERIES_NAME = ? ORDER BY SERIES_NAME');
+                        $episode_req->execute([$series_name]);
+
+                        // Boucle à travers chaque épisode de cette série
+                        while ($episode_row = $episode_req->fetch(PDO::FETCH_ASSOC)) {
+                            echo "<option value='" . $episode_row['TITLE'] . "'>" . $episode_row['EPISODE_NUMBER'] . " " . $episode_row['TITLE'] . "</option>";
                         }
-                    ?>
-                </select>
+
+                        echo "</optgroup>";
+                    }
+                ?>
+            </select>
+
+
             </div>
             <div class="d-grid gap-2">
                 <button type="submit" class="btn custom-btn">Envoyer</button>
@@ -31,7 +47,7 @@
 </html>
 
 <?php
-    if (isset($_POST['title'])) {
+    if (isset($_POST['title']) && $_POST['title'] != "") {
         $titleSelected = $_POST['title'];
 
         // On fait un joint à gauche pour avoir tous les élements de l'épisode ainsi que du nom et prénom du gagnant
@@ -45,7 +61,7 @@
 
         if ($req->rowCount() <= 0) {
             echo "<div class='error-box'>Vous n'avez pas choisi d'épisode</div>";
-        } else {
+        } else{
             $tuple = $req->fetch();
 
             $newTitle = isset($_POST['new_title']) ? $_POST['new_title'] : $tuple['TITLE'];
@@ -95,7 +111,7 @@
     
                 // Si le gagnant n'existe pas, on renvoie une erreur
                 if (!$person_id) {
-                    echo "<div class='error-box mt-2''>Le candidat spécifié n'existe pas dans la base de donnée. Pour être défini en tant que gagnant de cet épisode, un candidat doit remplir l'un des critères suivants :
+                    echo "<div class='error-box mt-2'>Le candidat spécifié n'existe pas dans la base de donnée. Pour être défini en tant que gagnant de cet épisode, un candidat doit remplir l'un des critères suivants :
                         <ul>
                             <li>Avoir le plus de points accumulés.</li>
                             <li>Gagner une tâche d'égalité spécifique à cet épisode.</li>
@@ -130,7 +146,7 @@
                                         WHERE p.EPISODE_NUMBER = :episode_number
                                             AND p.SERIES_NAME = :series_name
                                         GROUP BY p.CANDIDATE_ID
-                                    ) AS subquery
+                                    )
                                 )
                                 OR (
                                     tiebreakerresult.CANDIDATE_ID = person.ID
@@ -216,9 +232,105 @@
                     </button>
                 </form>
             </div>
+
+            
 <?php
         }
     }
     
 ?>
+    <div class='container d-flex flex-column align-items-center card shadow rounded-2 mt-8 mx-auto custom-bg-color p-5 pt-4 mt-4'>
+        <h2>Ajoutez des épisodes à une série non terminée</h2>
+        <form method='post' action='episode.php'>
+            <div class="input-group mb-3 mt-2">
+                <!-- Dropdown list for series names -->
+                <select class="form-select" style = "width: 300px;" name="series_name2">
+                    <option value="">Nom de la série</option>
+                    <?php
+                        // Fetch all series names from the database
+                        $req3 = $bdd->query('SELECT SERIES_NAME FROM series WHERE CHAMPION_ID IS NULL');
+                        while ($row = $req3->fetch(PDO::FETCH_ASSOC)) {
+                            echo "<option value='" . $row['SERIES_NAME'] . "'>" . $row['SERIES_NAME'] . "</option>";
+                        }
+                    ?>
+                </select>
+            </div>
 
+            <input type='number' class='form-control mb-3' name='count_episode' placeholder="Nombre d'épisode à ajouter" min = '1'>
+
+            <div class="d-grid gap-2">
+                    <button type="submit" class="btn custom-btn">Envoyer</button>
+                </div>
+        </form>
+    </div>
+                
+<?php 
+    if (isset($_POST['series_name2']) && $_POST['series_name2'] != "") {
+        $seriesName2 = $_POST['series_name2'];
+
+?>
+    <?php
+        if (isset($_POST['count_episode']) && $_POST['count_episode'] != "") {
+            $count_episode = $_POST['count_episode'];
+            $series_name = $_POST['series_name2'];
+
+            // On récupère le numéro de l'épisode le plus récent dans la série sélectionnée
+            $req_episode_number = $bdd->prepare("SELECT MAX(EPISODE_NUMBER) AS max_episode_number FROM episode WHERE SERIES_NAME = ?");
+            $req_episode_number->execute([$series_name]);
+            $row = $req_episode_number->fetch(PDO::FETCH_ASSOC);
+            $episode_number = ($row['max_episode_number'] !== null) ? $row['max_episode_number'] + 1 : 1;
+
+            if(isset($_POST['titles'])){
+                $titles = $_POST['titles'];
+
+                $req_episode = $bdd->prepare("INSERT INTO episode (SERIES_NAME, EPISODE_NUMBER, TITLE, AIRDATE) VALUES (:series_name2, :episode_number, :titles, :airdate)");
+
+                for ($i = 0; $i < count($titles); $i++) {
+                    $req_episode->execute(array(
+                        'series_name2' => $seriesName2,
+                        'episode_number' => $episode_number + $i,
+                        'titles' => $titles[$i],
+                        'airdate' => date('Y-m-d')
+                    ));
+
+                    if($req_episode->rowCount() <= 0){
+                        echo "<div class='error-box'>Un problème est survenu lors de l'ajout de l'épisode</div>";
+                    } else{
+                        echo "<div class='success-box'>L'épisode '$titles[$i]' a été ajouté avec succès à la série $seriesName2</div>";
+                    }
+                }
+            }
+
+            ?>
+            <div class='container d-flex flex-column align-items-center card shadow rounded-2 mt-8 mx-auto custom-bg-color p-5 pt-4 mt-4'>
+                <h2>Ajoutez des épisodes à la série : <?php echo $series_name; ?></h2>
+                <form method='post' action='episode.php'>
+                    <input type="hidden" name="count_episode" value="<?php echo $count_episode; ?>">
+                    <input type="hidden" name="series_name2" value="<?php echo $series_name; ?>">
+
+                    <table class='table table-bordered mt-3'>
+                        <thead>
+                            <tr>
+                                <th style="text-align: center;">Numéro</th>
+                                <th style="text-align: center;">Titre de l'épisode</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php for ($i = 0; $i < $count_episode; $i++) { ?>
+                                <tr>
+                                    <td style="vertical-align: middle; text-align: center;"><?php echo $episode_number + $i; ?></td>
+                                    <td><input type='text' class='form-control' name='titles[]' placeholder="Titre"></td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+
+                    <div class="d-grid gap-2">
+                        <button type='submit' style="width: 150px;" class='btn custom-btn'>Ajouter</button>
+                    </div>
+                </form>
+            </div>
+    <?php } ?>
+<?php
+    }
+?>
