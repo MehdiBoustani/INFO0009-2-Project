@@ -43,5 +43,10 @@ body {
     border-radius: 5px;
 }
 
+.black-link {
+    color: black;
+    text-decoration: underline;
+}
+
 
 
