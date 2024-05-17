@@ -15,8 +15,8 @@ GRANT FILE ON *.* TO 'group9'@'%';
 -- Création de la table 'person'
 CREATE TABLE IF NOT EXISTS `person` (
   `ID` int NOT NULL AUTO_INCREMENT,
-  `FIRSTNAME` varchar(15) NOT NULL,
-  `LASTNAME` varchar(15) NOT NULL,
+  `FIRSTNAME` varchar(30) NOT NULL,
+  `LASTNAME` varchar(30) NOT NULL,
 
   PRIMARY KEY (ID)
 

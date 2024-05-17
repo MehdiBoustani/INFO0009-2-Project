@@ -8,12 +8,13 @@ $bdd = new PDO('mysql:host=db;dbname=group9;charset=utf8', 'group9', 'tabodi');
 
 // Exécution de la requête
 $sql = "
-SELECT p.ID, p.FIRSTNAME, p.LASTNAME, 
-       COUNT(e.WINNER_ID) AS nb_wins, 
-       GROUP_CONCAT(e.TITLE ORDER BY e.AIRDATE SEPARATOR ', ') AS list_won_episodes
+SELECT p.FIRSTNAME, p.LASTNAME, 
+COUNT(e.WINNER_ID) AS nb_wins, 
+GROUP_CONCAT(e.TITLE ORDER BY e.AIRDATE SEPARATOR '; ') AS list_won_episodes
 FROM person p
 LEFT JOIN episode e ON p.ID = e.WINNER_ID
-GROUP BY p.ID, p.FIRSTNAME, p.LASTNAME;
+GROUP BY p.ID, p.FIRSTNAME, p.LASTNAME
+ORDER BY nb_wins DESC, p.FIRSTNAME, p.LASTNAME;
 ";
 $req = $bdd->query($sql);
 
@@ -26,9 +27,8 @@ $persons = $req->fetchAll();
     <table class="table table-bordered mt-3">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Nom</th>
                 <th>Prénom</th>
+                <th>Nom</th>
                 <th>Nombre d'épisodes gagnés</th>
                 <th>Liste des épisodes gagnés</th>
             </tr>
@@ -36,9 +36,8 @@ $persons = $req->fetchAll();
         <tbody>
             <?php foreach ($persons as $person): ?>
                 <tr>
-                    <td><?= ($person['ID']) ?></td>
-                    <td><?= ($person['LASTNAME']) ?></td>
                     <td><?= ($person['FIRSTNAME']) ?></td>
+                    <td><?= ($person['LASTNAME']) ?></td>
                     <td><?= ($person['nb_wins']) ?></td>
                     <td><?= ($person['list_won_episodes']) ?></td>
                 </tr>
