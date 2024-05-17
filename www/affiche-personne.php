@@ -36,11 +36,11 @@ $persons = $req->fetchAll();
         <tbody>
             <?php foreach ($persons as $person): ?>
                 <tr>
-                    <td><?= htmlspecialchars($person['ID']) ?></td>
-                    <td><?= htmlspecialchars($person['LASTNAME']) ?></td>
-                    <td><?= htmlspecialchars($person['FIRSTNAME']) ?></td>
-                    <td><?= htmlspecialchars($person['nb_wins']) ?></td>
-                    <td><?= htmlspecialchars($person['list_won_episodes']) ?></td>
+                    <td><?= ($person['ID']) ?></td>
+                    <td><?= ($person['LASTNAME']) ?></td>
+                    <td><?= ($person['FIRSTNAME']) ?></td>
+                    <td><?= ($person['nb_wins']) ?></td>
+                    <td><?= ($person['list_won_episodes']) ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
