@@ -36,7 +36,6 @@ $bdd = new PDO('mysql:host=db;dbname=group9;charset=utf8', 'group9', 'tabodi');
     if (isset($_POST['series_name'])) {
         $name = $_POST['series_name'];
 
-        // Prepare the SQL query
         $req = $bdd->prepare('SELECT SERIES_NAME FROM series WHERE SERIES_NAME = :series_name');
         $req->bindParam(':series_name', $name, PDO::PARAM_STR);
         $req->execute();
@@ -93,7 +92,7 @@ $bdd = new PDO('mysql:host=db;dbname=group9;charset=utf8', 'group9', 'tabodi');
                     }
                     echo "</tr>";
 
-                    $list = []; //empty list of totals 
+                    $list = [];
                     $count++;
                 }
             }

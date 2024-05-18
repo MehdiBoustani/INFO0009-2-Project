@@ -241,11 +241,9 @@
         <h2>Ajoutez des épisodes à une série non terminée</h2>
         <form method='post' action='episode.php'>
             <div class="input-group mb-3 mt-2">
-                <!-- Dropdown list for series names -->
                 <select class="form-select" style = "width: 300px;" name="series_name2">
                     <option value="">Nom de la série</option>
                     <?php
-                        // Fetch all series names from the database
                         $req3 = $bdd->query('SELECT SERIES_NAME FROM series WHERE CHAMPION_ID IS NULL');
                         while ($row = $req3->fetch(PDO::FETCH_ASSOC)) {
                             echo "<option value='" . $row['SERIES_NAME'] . "'>" . $row['SERIES_NAME'] . "</option>";

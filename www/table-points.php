@@ -57,7 +57,6 @@
             $episodeNumber2 = $row['EPISODE_NUMBER'];
         }
 
-        // Requête SQL avec jointures entre les tables task, feature, et candidate
         $req2 = $bdd->prepare('SELECT t.TASK_NUMBER, t.DESCRIPTION, CONCAT(per.FIRSTNAME, " ", per.LASTNAME) AS FULLNAME, p.POINTS
                                 FROM points p
                                 JOIN candidate c ON p.CANDIDATE_ID = c.ID

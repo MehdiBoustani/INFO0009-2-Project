@@ -13,7 +13,7 @@
             if (isset($_POST['firstname']) || isset($_POST['lastname'])):
                 $firstname = $_POST['firstname'];
                 $lastname = $_POST['lastname'];
-                /*$req contient les tuples de la requête*/
+
                 $req = $bdd->prepare('SELECT FIRSTNAME, LASTNAME FROM person WHERE FIRSTNAME = :firstname OR LASTNAME = :lastname', [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]); // Prepare pour éviter les injections sql
                 $req->execute(array('firstname' => $firstname, 'lastname' => $lastname));
                 
