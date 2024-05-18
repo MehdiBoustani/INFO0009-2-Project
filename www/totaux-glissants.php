@@ -43,7 +43,7 @@ $bdd = new PDO('mysql:host=db;dbname=group9;charset=utf8', 'group9', 'tabodi');
                             INNER JOIN points ON points.CANDIDATE_ID = person.ID                      
                             WHERE SERIES_NAME =:series_name
                             GROUP BY person.FIRSTNAME, person.LASTNAME, points.EPISODE_NUMBER
-                            ORDER BY points.EPISODE_NUMBER ASC, person.FIRSTNAME ASC');
+                            ORDER BY points.EPISODE_NUMBER, person.FIRSTNAME, person.LASTNAME');
         
         $req2->bindParam(':series_name', $name, PDO::PARAM_STR);
         $req2->execute();
