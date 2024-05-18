@@ -40,7 +40,7 @@ $bdd = new PDO('mysql:host=db;dbname=group9;charset=utf8', 'group9', 'tabodi');
         
         $req2 = $bdd->prepare('SELECT person.FIRSTNAME, person.LASTNAME, SUM(points.POINTS) AS TOTAL_POINTS, points.EPISODE_NUMBER
                             FROM person
-                            JOIN points ON points.CANDIDATE_ID = person.ID                      
+                            INNER JOIN points ON points.CANDIDATE_ID = person.ID                      
                             WHERE SERIES_NAME =:series_name
                             GROUP BY person.FIRSTNAME, person.LASTNAME, points.EPISODE_NUMBER
                             ORDER BY points.EPISODE_NUMBER ASC, person.FIRSTNAME ASC');
