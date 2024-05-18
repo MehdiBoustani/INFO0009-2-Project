@@ -22,8 +22,9 @@
                             echo "<optgroup label='$series_name'>";
 
                             // Requête pour obtenir les épisodes de cette série
-                            $episode_req = $bdd->prepare('SELECT TITLE, EPISODE_NUMBER FROM episode WHERE SERIES_NAME = ? ORDER BY SERIES_NAME');
-                            $episode_req->execute([$series_name]);
+                            $episode_req = $bdd->prepare('SELECT TITLE, EPISODE_NUMBER FROM episode WHERE SERIES_NAME = :series_name ORDER BY SERIES_NAME');
+                            $episode_req->bindParam(':series_name', $series_name, PDO::PARAM_STR);
+                            $episode_req->execute();
 
                             // Boucle à travers chaque épisode de cette série
                             while ($episode_row = $episode_req->fetch(PDO::FETCH_ASSOC)) {

@@ -28,7 +28,7 @@
                 }                
             endif; 
         ?>
-        <form method="post" action="tables.php">
+        <form method="post" action="selection-donnees.php">
             <p>
                 <div class="input-group mb-3">
                     <input type="text" class="form-control" style="width: 500px;" placeholder="Prénom" name="firstname">
@@ -61,7 +61,7 @@
     <div class="container d-flex flex-column align-items-center card shadow rounded-2 mt-8 mx-auto custom-bg-color p-5 pt-4 mt-4">
         <h2>Sélectionner des séries</h2>
         
-        <form method="post" action="tables.php">
+        <form method="post" action="selection-donnees.php">
             <p>
                 <div class="input-group mb-3">
                     <input type="text" class="form-control block" style="width: 400px;" placeholder="Nom de la série" name="series_name">
@@ -116,8 +116,8 @@
                     assistant.FIRSTNAME AS assistant_firstname, assistant.LASTNAME AS assistant_lastname,
                     champion.FIRSTNAME AS champion_firstname, champion.LASTNAME AS champion_lastname
                     FROM series 
-                    LEFT JOIN person taskmaster ON series.TASKMASTER_ID = taskmaster.ID
-                    LEFT JOIN person assistant ON series.ASSISTANT_ID = assistant.ID
+                    INNER JOIN person taskmaster ON series.TASKMASTER_ID = taskmaster.ID
+                    INNER JOIN person assistant ON series.ASSISTANT_ID = assistant.ID
                     LEFT JOIN person champion ON series.CHAMPION_ID  = champion.ID
                     WHERE series.SERIES_NAME = :series_name 
                         OR series.NETWORK = :network 
@@ -166,7 +166,7 @@
     </div>
     <div class="container d-flex flex-column align-items-center card shadow rounded-2 mt-8 mx-auto custom-bg-color p-5 pt-4 mt-4 mb-4">
         <h2>Sélectionner des épisodes</h2>
-        <form method="post" action="tables.php">
+        <form method="post" action="selection-donnees.php">
             <p>
                 <div class="input-group mb-3">
                     <input type="text" class="form-control" style="width: 300px;" placeholder="Nom de la série" name="series_name2">
@@ -203,7 +203,7 @@
                 $req = $bdd->prepare('SELECT episode.SERIES_NAME, episode.EPISODE_NUMBER, episode.TITLE, episode.AIRDATE, 
                     winner.FIRSTNAME AS winner_firstname, winner.LASTNAME AS winner_lastname
                     FROM episode
-                    INNER JOIN person winner ON episode.WINNER_ID = winner.ID
+                    LEFT JOIN person winner ON episode.WINNER_ID = winner.ID
                     WHERE episode.SERIES_NAME = :series_name2 
                         OR episode.EPISODE_NUMBER = :episode_number 
                         OR episode.TITLE = :title

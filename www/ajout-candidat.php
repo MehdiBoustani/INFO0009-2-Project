@@ -58,7 +58,7 @@
 <body>
     <div class="container d-flex flex-column align-items-center card shadow rounded-2 mt-8 mx-auto custom-bg-color p-5 pt-4 mt-4">
         <h2>Ajout de candidat</h2>
-        <form method="post" action="ajout-candidate.php">
+        <form method="post" action="ajout-candidat.php">
             <div class="input-group mb-3 mt-2">
                 <input type="text" class="form-control" style="width: 400px;" placeholder="Prénom" name="firstname">
             </div>

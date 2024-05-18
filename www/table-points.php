@@ -14,19 +14,19 @@
                 <select class="form-select" style="width: 300px;" name="title">
                     <option value="">Titre de l'épisode</option>
                     <?php
-                    $series_req = $bdd->query('SELECT SERIES_NAME FROM series ORDER BY SERIES_NAME');
-                    while ($seriesRow = $series_req->fetch(PDO::FETCH_ASSOC)) {
-                        $seriesName = $seriesRow['SERIES_NAME']; 
-                        echo "<optgroup label='$seriesName'>";
-                        // Requête pour obtenir les épisodes de cette série
-                        $episode_req = $bdd->prepare('SELECT TITLE, EPISODE_NUMBER FROM episode WHERE SERIES_NAME = ? ORDER BY EPISODE_NUMBER');
-                        $episode_req->execute([$seriesName]);
-                        // Boucle à travers chaque épisode de cette série
-                        while ($episodeRow = $episode_req->fetch(PDO::FETCH_ASSOC)) {
-                            echo "<option value='" . $episodeRow['TITLE'] . "' data-episode='" . $episodeRow['EPISODE_NUMBER'] . "'>" . $episodeRow['EPISODE_NUMBER'] . " " . $episodeRow['TITLE'] . "</option>";
+                        $series_req = $bdd->query('SELECT SERIES_NAME FROM series ORDER BY SERIES_NAME');
+                        while ($seriesRow = $series_req->fetch(PDO::FETCH_ASSOC)) {
+                            $seriesName = $seriesRow['SERIES_NAME']; 
+                            echo "<optgroup label='$seriesName'>";
+                            // Requête pour obtenir les épisodes de cette série
+                            $episode_req = $bdd->prepare('SELECT TITLE, EPISODE_NUMBER FROM episode WHERE SERIES_NAME = ? ORDER BY EPISODE_NUMBER');
+                            $episode_req->execute([$seriesName]);
+                            // Boucle à travers chaque épisode de cette série
+                            while ($episodeRow = $episode_req->fetch(PDO::FETCH_ASSOC)) {
+                                echo "<option value='" . $episodeRow['TITLE'] . "' data-episode='" . $episodeRow['EPISODE_NUMBER'] . "'>" . $episodeRow['EPISODE_NUMBER'] . " " . $episodeRow['TITLE'] . "</option>";
+                            }
+                            echo "</optgroup>";
                         }
-                        echo "</optgroup>";
-                    }
                     ?>
                 </select>
             </div>

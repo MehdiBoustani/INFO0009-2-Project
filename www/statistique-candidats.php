@@ -8,7 +8,7 @@
 
 <div class="container d-flex flex-column align-items-center card shadow rounded-2 mt-8 mx-auto custom-bg-color p-5 pt-4 mt-4 mb-4">
     <h2>Statistiques des candidats</h2>
-    <form method="get" action="statistique-candidate.php">
+    <form method="get" action="statistique-candidats.php">
         <div class="input-group mb-3 mt-2">
             <select class="form-select" style = "width: 300px;" name="order">
                 <option value="">Nom de la colonne de tri</option>
