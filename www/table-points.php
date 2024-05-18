@@ -57,12 +57,12 @@
             $episodeNumber2 = $row['EPISODE_NUMBER'];
         }
 
-        $req2 = $bdd->prepare('SELECT t.TASK_NUMBER, t.DESCRIPTION, CONCAT(per.FIRSTNAME, " ", per.LASTNAME) AS FULLNAME, p.POINTS
+        $req2 = $bdd->prepare('SELECT t.TASK_NUMBER, CONCAT(per.FIRSTNAME, " ", per.LASTNAME) AS FULLNAME, p.POINTS
                                 FROM points p
-                                JOIN candidate c ON p.CANDIDATE_ID = c.ID
-                                JOIN person per ON c.ID = per.ID
-                                JOIN feature f ON p.SERIES_NAME = f.SERIES_NAME AND c.ID = f.CANDIDATE_ID
-                                JOIN task t ON p.SERIES_NAME = t.SERIES_NAME AND p.EPISODE_NUMBER = t.EPISODE_NUMBER AND p.TASK_NUMBER = t.TASK_NUMBER
+                                INNER JOIN candidate c ON p.CANDIDATE_ID = c.ID
+                                INNER JOIN person per ON c.ID = per.ID
+                                INNER JOIN feature f ON p.SERIES_NAME = f.SERIES_NAME AND c.ID = f.CANDIDATE_ID
+                                INNER JOIN task t ON p.SERIES_NAME = t.SERIES_NAME AND p.EPISODE_NUMBER = t.EPISODE_NUMBER AND p.TASK_NUMBER = t.TASK_NUMBER
                                 WHERE p.SERIES_NAME = :series_name AND p.EPISODE_NUMBER = :episode_number
                                 ORDER BY f.CHAIR, t.TASK_NUMBER');
 
