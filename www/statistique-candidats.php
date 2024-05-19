@@ -13,12 +13,12 @@
             <select class="form-select" style = "width: 300px;" name="order">
                 <option value="">Nom de la colonne de tri</option>
                 <option value="Moyenne" <?php if ($order_column === 'Moyenne') echo 'selected'; ?>>Moyenne</option>
-                <option value="pecent_zero_points" <?php if ($order_column === 'pecent_zero_points') echo 'selected'; ?>>0 points</option>
-                <option value="pecent_one_points" <?php if ($order_column === 'pecent_one_points') echo 'selected'; ?>>1 point</option>
-                <option value="pecent_two_points" <?php if ($order_column === 'pecent_two_points') echo 'selected'; ?>>2 points</option>
-                <option value="pecent_three_points" <?php if ($order_column === 'pecent_three_points') echo 'selected'; ?>>3 points</option>
-                <option value="pecent_four_points" <?php if ($order_column === 'pecent_four_points') echo 'selected'; ?>>4 points</option>
-                <option value="pecent_five_points" <?php if ($order_column === 'pecent_five_points') echo 'selected'; ?>>5 points</option>
+                <option value="percent_zero_points" <?php if ($order_column === 'percent_zero_points') echo 'selected'; ?>>0 points</option>
+                <option value="percent_one_points" <?php if ($order_column === 'percent_one_points') echo 'selected'; ?>>1 point</option>
+                <option value="percent_two_points" <?php if ($order_column === 'percent_two_points') echo 'selected'; ?>>2 points</option>
+                <option value="percent_three_points" <?php if ($order_column === 'percent_three_points') echo 'selected'; ?>>3 points</option>
+                <option value="percent_four_points" <?php if ($order_column === 'percent_four_points') echo 'selected'; ?>>4 points</option>
+                <option value="percent_five_points" <?php if ($order_column === 'percent_five_points') echo 'selected'; ?>>5 points</option>
                 <option value="FIRSTNAME" <?php if ($order_column === 'FIRSTNAME') echo 'selected'; ?>>Prénom</option>
                 <option value="LASTNAME" <?php if ($order_column === 'LASTNAME') echo 'selected'; ?>>Nom</option>
             </select>
@@ -36,12 +36,12 @@
         $req = $bdd->prepare('SELECT 
                                 person.FIRSTNAME, 
                                 person.LASTNAME,
-                                COUNT(CASE WHEN points.POINTS = 0 THEN 1 ELSE NULL END) / COUNT(*) * 100 AS pecent_zero_points,
-                                COUNT(CASE WHEN points.POINTS = 1 THEN 1 ELSE NULL END) / COUNT(*) * 100 AS pecent_one_points,
-                                COUNT(CASE WHEN points.POINTS = 2 THEN 1 ELSE NULL END) / COUNT(*) * 100 AS pecent_two_points,
-                                COUNT(CASE WHEN points.POINTS = 3 THEN 1 ELSE NULL END) / COUNT(*) * 100 AS pecent_three_points,
-                                COUNT(CASE WHEN points.POINTS = 4 THEN 1 ELSE NULL END) / COUNT(*) * 100 AS pecent_four_points,
-                                COUNT(CASE WHEN points.POINTS = 5 THEN 1 ELSE NULL END) / COUNT(*) * 100 AS pecent_five_points,
+                                COUNT(CASE WHEN points.POINTS = 0 THEN 1 ELSE NULL END) / COUNT(*) * 100 AS percent_zero_points,
+                                COUNT(CASE WHEN points.POINTS = 1 THEN 1 ELSE NULL END) / COUNT(*) * 100 AS percent_one_points,
+                                COUNT(CASE WHEN points.POINTS = 2 THEN 1 ELSE NULL END) / COUNT(*) * 100 AS percent_two_points,
+                                COUNT(CASE WHEN points.POINTS = 3 THEN 1 ELSE NULL END) / COUNT(*) * 100 AS percent_three_points,
+                                COUNT(CASE WHEN points.POINTS = 4 THEN 1 ELSE NULL END) / COUNT(*) * 100 AS percent_four_points,
+                                COUNT(CASE WHEN points.POINTS = 5 THEN 1 ELSE NULL END) / COUNT(*) * 100 AS percent_five_points,
                                 ROUND(AVG(points.POINTS), 2) AS Moyenne
                             FROM 
                                 person
@@ -74,12 +74,12 @@
                 <tr>
                     <td><?= $row['FIRSTNAME'] ?></td>
                     <td><?= $row['LASTNAME'] ?></td>
-                    <td><?= number_format($row['pecent_zero_points'], 2) ?>%</td>
-                    <td><?= number_format($row['pecent_one_points'], 2) ?>%</td>
-                    <td><?= number_format($row['pecent_two_points'], 2) ?>%</td>
-                    <td><?= number_format($row['pecent_three_points'], 2) ?>%</td>
-                    <td><?= number_format($row['pecent_four_points'], 2) ?>%</td>
-                    <td><?= number_format($row['pecent_five_points'], 2) ?>%</td>
+                    <td><?= number_format($row['percent_zero_points'], 2) ?>%</td>
+                    <td><?= number_format($row['percent_one_points'], 2) ?>%</td>
+                    <td><?= number_format($row['percent_two_points'], 2) ?>%</td>
+                    <td><?= number_format($row['percent_three_points'], 2) ?>%</td>
+                    <td><?= number_format($row['percent_four_points'], 2) ?>%</td>
+                    <td><?= number_format($row['percent_five_points'], 2) ?>%</td>
                     <td><?= $row['Moyenne'] ?></td>
                 </tr>
             <?php endwhile; ?>
