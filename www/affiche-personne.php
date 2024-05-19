@@ -3,23 +3,23 @@
     include 'header.html';
     include 'navbar.php';
 
-// Database connection
-$bdd = new PDO('mysql:host=db;dbname=group9;charset=utf8', 'group9', 'tabodi');
+    // Database connection
+    $bdd = new PDO('mysql:host=db;dbname=group9;charset=utf8', 'group9', 'tabodi');
 
-// Exécution de la requête
-$sql = "
-SELECT p.FIRSTNAME, p.LASTNAME, 
-COUNT(e.WINNER_ID) AS nb_wins, 
-GROUP_CONCAT(e.TITLE ORDER BY e.AIRDATE SEPARATOR '; ') AS list_won_episodes
-FROM person p
-LEFT JOIN episode e ON p.ID = e.WINNER_ID
-GROUP BY p.ID, p.FIRSTNAME, p.LASTNAME
-ORDER BY nb_wins DESC, p.FIRSTNAME, p.LASTNAME;
-";
-$req = $bdd->query($sql);
+    // Exécution de la requête
+    $sql = "
+    SELECT p.FIRSTNAME, p.LASTNAME, 
+    COUNT(e.WINNER_ID) AS nb_wins, 
+    GROUP_CONCAT(e.TITLE ORDER BY e.AIRDATE SEPARATOR '; ') AS list_won_episodes
+    FROM person p
+    LEFT JOIN episode e ON p.ID = e.WINNER_ID
+    GROUP BY p.ID, p.FIRSTNAME, p.LASTNAME
+    ORDER BY nb_wins DESC, p.FIRSTNAME, p.LASTNAME;
+    ";
+    $req = $bdd->query($sql);
 
-// Récupération des résultats
-$persons = $req->fetchAll();
+    // Récupération des résultats
+    $persons = $req->fetchAll();
 
 ?>
 <div class="container d-flex flex-column align-items-center card shadow rounded-2 mt-8 mx-auto custom-bg-color p-5 pt-4 mt-4 mb-4">

@@ -25,7 +25,7 @@
 
             if ($req->rowCount() > 0) {
                 // Le candidat existe déjà, afficher un message approprié
-                echo '<p>Le candidat avec le même prénom et nom existe déjà dans la base de données.</p>';
+                echo "<div class='error-box'>Le candidat avec le même prénom et nom existe déjà dans la base de données.</div>";
             } else {
                 
                 // Insérer le nom et le prénom du candidat dans la table Person
@@ -50,7 +50,7 @@
             }
 
         } else {
-            echo '<p>Saisir au moins un métier.</p>';
+            echo "<div class='error-box'>Veuillez saisir au moins un métier.</div>";
         }
     }
 ?>
@@ -60,14 +60,14 @@
         <h2>Ajout de candidat</h2>
         <form method="post" action="ajout-candidat.php">
             <div class="input-group mb-3 mt-2">
-                <input type="text" class="form-control" style="width: 400px;" placeholder="Prénom" name="firstname">
+                <input type="text" class="form-control" style="width: 400px;" placeholder="Prénom" name="firstname" required>
             </div>
             <div class="input-group mb-3">
-                <input type="text" class="form-control" style="width: 400px;" placeholder="Nom" name="lastname">
+                <input type="text" class="form-control" style="width: 400px;" placeholder="Nom" name="lastname" required>
             </div>
 
             <div class="form-group">
-                <textarea id="job" name="job" class="form-control" placeholder="Métiers (un par ligne)" rows="5"></textarea>
+                <textarea id="job" name="job" class="form-control" placeholder="Métiers (un par ligne)" rows="5" required></textarea>
             </div>
 
             <div class="d-grid gap-2 mt-3">
