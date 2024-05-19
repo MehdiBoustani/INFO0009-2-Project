@@ -27,6 +27,19 @@ LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/PERSON.CSV' INTO TABLE `person
 -- -------------------------------------------------------------------------------------------------------------------------------
 
 -- -------------------------------------------------------------------------------------------------------------------------------
+-- Création de la table 'taskmaster'
+CREATE TABLE IF NOT EXISTS `taskmaster` (
+  `ID` int NOT NULL,
+
+  PRIMARY KEY (ID)
+
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
+
+-- Chargement des données dans la table 'taskmaster'
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/TASKMASTER.CSV' INTO TABLE `taskmaster` FIELDS TERMINATED BY ';'  IGNORE 1 ROWS;
+-- -------------------------------------------------------------------------------------------------------------------------------
+
+-- -------------------------------------------------------------------------------------------------------------------------------
 -- Création de la table 'assistant'
 CREATE TABLE IF NOT EXISTS `assistant` (
   `ID` int NOT NULL,
@@ -68,18 +81,6 @@ CREATE TABLE IF NOT EXISTS `job` (
 LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/JOB.CSV' INTO TABLE `job` FIELDS TERMINATED BY ';'  IGNORE 1 ROWS;
 -- -------------------------------------------------------------------------------------------------------------------------------
 
--- -------------------------------------------------------------------------------------------------------------------------------
--- Création de la table 'taskmaster'
-CREATE TABLE IF NOT EXISTS `taskmaster` (
-  `ID` int NOT NULL,
-
-  PRIMARY KEY (ID)
-
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
-
--- Chargement des données dans la table 'taskmaster'
-LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/TASKMASTER.CSV' INTO TABLE `taskmaster` FIELDS TERMINATED BY ';'  IGNORE 1 ROWS;
--- -------------------------------------------------------------------------------------------------------------------------------
 
 -- -------------------------------------------------------------------------------------------------------------------------------
 -- Création de la table 'series'
@@ -87,7 +88,7 @@ CREATE TABLE IF NOT EXISTS `series` (
   `SERIES_NAME` varchar(20) NOT NULL,
   `NETWORK` varchar(20) NOT NULL,
   `STARTDATE` date NOT NULL,
-  `ENDDATE` date NOT NULL,
+  `ENDDATE` date DEFAULT NULL,
   `TASKMASTER_ID` int NOT NULL,
   `ASSISTANT_ID` int NOT NULL,
   `CHAMPION_ID` int DEFAULT NULL,
