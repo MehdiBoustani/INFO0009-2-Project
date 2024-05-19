@@ -42,7 +42,9 @@ LOAD DATA INFILE '/docker-entrypoint-initdb.d/csv/ASSISTANT.CSV' INTO TABLE `ass
 -- -------------------------------------------------------------------------------------------------------------------------------
 -- Création de la table 'candidate'
 CREATE TABLE IF NOT EXISTS `candidate` (
-  `ID` int NOT NULL PRIMARY KEY
+  `ID` int NOT NULL,
+
+  PRIMARY KEY (ID)
   
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
