@@ -317,8 +317,8 @@
                             <?php for ($i = 0; $i < $count_episode; $i++) { ?>
                                 <tr>
                                     <td style="vertical-align: middle; text-align: center;"><?php echo $episode_number + $i; ?></td>
-                                    <td><input type='text' class='form-control' name='titles[]' placeholder="Titre"></td>
-                                    <td><input data-provide="datepicker" data-date-format="yyyy-mm-dd" class="form-control" placeholder="Date" name="airdates[]"></td>
+                                    <td><input type='text' class='form-control' name='titles[]' placeholder="Titre" required></td>
+                                    <td><input data-provide="datepicker" data-date-format="yyyy-mm-dd" class="form-control" placeholder="Date" name="airdates[]" required></td>
                                 </tr>
                             <?php } ?>
                         </tbody>

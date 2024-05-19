@@ -23,12 +23,11 @@
                         <a class = "nav-link" href="./table-points.php">Points par tâche pour un épisode</a>
                     </li>
                     <li class="nav-item">
-                        <a class = "nav-link" href="./affiche-personne.php">Liste d'épisodes gagnés par personne</a>
-                    </li>
-                    <li class="nav-item">
                         <a class = "nav-link" href="./totaux-glissants.php">Totaux cumulatifs des candidats</a>
                     </li>
-                  
+                    <li class="nav-item">
+                        <a class = "nav-link" href="./affiche-personne.php">Liste d'épisodes gagnés par personne</a>
+                    </li>
                 </ul>
             <?php endif; ?>
         </div>
