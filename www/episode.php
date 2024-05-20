@@ -9,9 +9,9 @@
 <body>
     <div class="container d-flex flex-column align-items-center card shadow rounded-2 mt-8 mx-auto custom-bg-color p-5 pt-4 mt-4">
         <h2>Sélectionner un épisode</h2>
-        <form method="post" action="episode.php">
+        <form method="post" action="episode.php" id="episodeForm">
             <div class="input-group mb-3 mt-2">
-                <select class="form-select" style="width: 300px;" name="title">
+                <select class="form-select" style="width: 300px;" name="title" id="titleSelect">
                     <option value="">Titre de l'épisode</option>
                     <?php
 
@@ -29,13 +29,16 @@
                             // Boucle à travers chaque épisode de cette série
                             while ($episode_row = $episode_req->fetch(PDO::FETCH_ASSOC)) {
                                 $title = htmlspecialchars($episode_row['TITLE'], ENT_QUOTES, 'UTF-8');
-                                echo "<option value='" . $title . "' data-episode='" . $episodeRow['EPISODE_NUMBER'] . "'>" . $episodeRow['EPISODE_NUMBER'] . " " . $title . "</option>";
+                                $episode_number = $episode_row['EPISODE_NUMBER'];
+                                echo "<option value='" . $title . "' data-series='" . $series_name . "' data-episode='" . $episode_number . "'>" . $episode_number . " - " . $title . "</option>";
                             }
 
                             echo "</optgroup>";
                         }
                     ?>
                 </select>
+                <input type="hidden" name="series" id="seriesInput">
+                <input type="hidden" name="episode" id="episodeInput">
             </div>
             <div class="d-grid gap-2">
                 <button type="submit" class="btn custom-btn">Envoyer</button>
@@ -48,6 +51,9 @@
 <?php
     if (isset($_POST['title']) && $_POST['title'] != "") {
         $titleSelected = $_POST['title'];
+        $seriesSelected = $_POST['series'];
+        $episodeSelected = $_POST['episode'];
+
 
         // On fait un joint à gauche pour avoir tous les élements de l'épisode ainsi que du nom et prénom du gagnant
         $req = $bdd->prepare('SELECT episode.*, person.FIRSTNAME AS WINNER_FIRSTNAME, person.LASTNAME AS WINNER_LASTNAME
@@ -75,16 +81,17 @@
             );
 
             if ($fieldsChanged) {
-
-                $req2 = $bdd->prepare('UPDATE episode SET TITLE = :new_title, AIRDATE = :airdate WHERE TITLE = :title');
+                $req2 = $bdd->prepare('UPDATE episode SET TITLE = :new_title, AIRDATE = :airdate WHERE TITLE = :title AND EPISODE_NUMBER = :episode_number AND SERIES_NAME = :series_name');
 
                 $req2->execute(array(
                     'new_title' => $newTitle,
                     'airdate' => $airdate,
-                    'title' => $titleSelected
+                    'title' => $titleSelected,
+                    'episode_number' => $episodeSelected,
+                    'series_name' => $seriesSelected
                 ));
 
-                if ($req2->errorCode() === "00000") {
+                if ($req2->errorCode() === "00000" && $req2->rowCount() > 0) {
                     echo "<div class='success-box mt-2''>L'épisode a été mis à jour avec succès (rafraîchir la page pour voir les modifications).</div>";
                 } else {
                     $errorInfo = $req2->errorInfo();
@@ -166,12 +173,14 @@
                     $win = $req_winner->fetchColumn();
 
                     if($win){
-                        $req_updateWinner = $bdd->prepare('UPDATE episode SET WINNER_ID = :winner_id WHERE TITLE = :title');
+                        $req_updateWinner = $bdd->prepare('UPDATE episode SET WINNER_ID = :winner_id WHERE TITLE = :title AND EPISODE_NUMBER = :episode_number AND SERIES_NAME = :series_name');
                         $req_updateWinner->execute(array(
                             'winner_id' => $person_id,
                             'title' => $titleSelected,
-
+                            'episode_number' => $episodeSelected,
+                            'series_name' => $seriesSelected
                         ));
+
                         if($req_updateWinner->rowCount() >= 0){
                             echo "<div class='success-box mt-2'>Le gagnant de cette épisode a bien été mis à jour (rafraîchir la page pour voir les modifications).</div>";
                         }
@@ -206,6 +215,8 @@
                         </tbody>
                     </table>
                     <input type="hidden" name="title" value="<?php echo $titleSelected; ?>">
+                    <input type="hidden" name="series" value="<?php echo $seriesSelected; ?>">
+                    <input type="hidden" name="episode" value="<?php echo $episodeSelected; ?>">
                     
                     <button type='submit' onClick="window.location.reload();" class='btn custom-btn'>Mettre à jour</button>
                 </form>
@@ -225,6 +236,8 @@
                     </div>
 
                     <input type="hidden" name="title" value="<?php echo $titleSelected; ?>">
+                    <input type="hidden" name="series" value="<?php echo $seriesSelected; ?>">
+                    <input type="hidden" name="episode" value="<?php echo $episodeSelected; ?>">
 
                     <button type='submit' class='btn custom-btn'>
                         <?php echo ($tuple['WINNER_FIRSTNAME'] === null && $tuple['WINNER_LASTNAME'] === null) ? "Définir le gagnant" : "Mettre à jour le gagnant"; ?>
@@ -334,3 +347,17 @@
 <?php
     }
 ?>
+
+<!-- Utilisation de code JavaScript pour récupérer les champs cachés de la liste (EPISODE_NUMBER & SERIES_NAME) -->
+<script>
+    function updateHiddenFields() {
+        var select = document.getElementById('titleSelect');
+        var selectedOption = select.options[select.selectedIndex];
+        document.getElementById('seriesInput').value = selectedOption.getAttribute('data-series');
+        document.getElementById('episodeInput').value = selectedOption.getAttribute('data-episode');
+    }
+
+    document.getElementById('titleSelect').addEventListener('change', updateHiddenFields);
+    
+    updateHiddenFields();
+</script>
