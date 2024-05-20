@@ -209,7 +209,7 @@
                         OR episode.TITLE = :title
                         OR episode.AIRDATE = :airdate 
                         OR (winner.FIRSTNAME = :winner_firstname OR winner.LASTNAME = :winner_lastname)
-                    ORDER BY episode.EPISODE_NUMBER
+                    ORDER BY episode.EPISODE_NUMBER, episode.SERIES_NAME
                 ');
                 
                 $req->execute(array(
