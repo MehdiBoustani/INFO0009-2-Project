@@ -45,7 +45,7 @@
                                 ROUND(AVG(points.POINTS), 2) AS Moyenne
                             FROM 
                                 person
-                            JOIN 
+                            INNER JOIN 
                                 points ON points.CANDIDATE_ID = person.ID
                             GROUP BY 
                                 person.FIRSTNAME, 
