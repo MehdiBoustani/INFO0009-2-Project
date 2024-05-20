@@ -47,6 +47,8 @@
                     $req->bindParam(':job', $metier);
                     $req->execute();
                 }
+
+                echo "<div class='success-box'>Le candidat a été ajouté avec succès.</div>";
             }
 
         } else {
