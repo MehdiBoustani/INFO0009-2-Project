@@ -22,8 +22,9 @@
                             $episode_req = $bdd->prepare('SELECT TITLE, EPISODE_NUMBER FROM episode WHERE SERIES_NAME = ? ORDER BY EPISODE_NUMBER');
                             $episode_req->execute([$seriesName]);
                             // Boucle à travers chaque épisode de cette série
-                            while ($episodeRow = $episode_req->fetch(PDO::FETCH_ASSOC)) {
-                                echo "<option value='" . $episodeRow['TITLE'] . "' data-episode='" . $episodeRow['EPISODE_NUMBER'] . "'>" . $episodeRow['EPISODE_NUMBER'] . " " . $episodeRow['TITLE'] . "</option>";
+                            while ($episode_row = $episode_req->fetch(PDO::FETCH_ASSOC)) {
+                                $title = htmlspecialchars($episode_row['TITLE'], ENT_QUOTES, 'UTF-8');
+                                echo "<option value='" . $title . "' data-episode='" . $episodeRow['EPISODE_NUMBER'] . "'>" . $episodeRow['EPISODE_NUMBER'] . " " . $title . "</option>";
                             }
                             echo "</optgroup>";
                         }
