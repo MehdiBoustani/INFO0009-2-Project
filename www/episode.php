@@ -84,7 +84,7 @@
                 ));
 
                 if ($req2->errorCode() === "00000") {
-                    echo "<div class='success-box mt-2''>L'épisode a été mis à jour avec succès.</div>";
+                    echo "<div class='success-box mt-2''>L'épisode a été mis à jour avec succès (rafraîchir la page pour voir les modifications).</div>";
                 } else {
                     $errorInfo = $req2->errorInfo();
                     echo "<div class='error-box mt-2''>Une erreur s'est produite lors de la mise à jour des informations : {$errorInfo[2]}</div>";
@@ -114,7 +114,7 @@
                             <li>Avoir le plus de points accumulés.</li>
                             <li>Gagner une tâche d'égalité spécifique à cet épisode.</li>
                         </ul>
-                        <form method='get' action='ajout-candidate.php'>
+                        <form method='get' action='ajout-candidat.php'>
                             <button type='submit' class='btn custom-btn'>Créer un candidat ?</button>
                         </form>
 
@@ -172,7 +172,7 @@
 
                         ));
                         if($req_updateWinner->rowCount() >= 0){
-                            echo "<div class='success-box mt-2'>Le gagnant de cette épisode a bien été mis à jour.</div>";
+                            echo "<div class='success-box mt-2'>Le gagnant de cette épisode a bien été mis à jour (rafraîchir la page pour voir les modifications).</div>";
                         }
                     }
                     else{

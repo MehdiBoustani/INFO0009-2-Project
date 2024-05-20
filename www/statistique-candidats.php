@@ -23,6 +23,7 @@
                 <option value="LASTNAME" <?php if ($order_column === 'LASTNAME') echo 'selected'; ?>>Nom</option>
             </select>
         </div>
+        
         <div class="d-grid gap-2">
             <button type="submit" class="btn custom-btn">Afficher les statistiques</button>
         </div>
@@ -30,7 +31,7 @@
 
 <?php
     // Vérifier si un élément a été sélectionné
-    if(isset($_GET['order'])) {
+    if (isset($_GET['order']) && !empty($_GET['order'])) {
         // Récupération des statistiques depuis la base de données
         $order_column = $_GET['order']; // Colonne de tri
         $req = $bdd->prepare('SELECT 
@@ -88,5 +89,10 @@
 </div>
 
 <?php
+}
+else {
+    if (isset($_GET['order'])) {
+        echo "<div class='error-box mt-4'>Veuillez sélectionner une colonne pour trier les statistiques.</div>";
+    }
 }
 ?>
