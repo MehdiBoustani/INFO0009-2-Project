@@ -28,7 +28,8 @@
 
                             // Boucle à travers chaque épisode de cette série
                             while ($episode_row = $episode_req->fetch(PDO::FETCH_ASSOC)) {
-                                echo "<option value='" . $episode_row['TITLE'] . "'>" . $episode_row['EPISODE_NUMBER'] . " " . $episode_row['TITLE'] . "</option>";
+                                $title = htmlspecialchars($episode_row['TITLE'], ENT_QUOTES, 'UTF-8');
+                                echo "<option value='" . $title . "' data-episode='" . $episodeRow['EPISODE_NUMBER'] . "'>" . $episodeRow['EPISODE_NUMBER'] . " " . $title . "</option>";
                             }
 
                             echo "</optgroup>";
