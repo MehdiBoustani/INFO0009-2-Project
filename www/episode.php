@@ -299,7 +299,7 @@
             }
 
             ?>
-            <div class='container d-flex flex-column align-items-center card shadow rounded-2 mt-8 mx-auto custom-bg-color p-5 pt-4 mt-4'>
+            <div class='container d-flex flex-column align-items-center card shadow rounded-2 mt-8 mx-auto custom-bg-color p-5 pt-4 mt-4 mb-4'>
                 <h2>Ajoutez des épisodes à la série : <?php echo $series_name; ?></h2>
                 <form method='post' action='episode.php'>
                     <input type="hidden" name="count_episode" value="<?php echo $count_episode; ?>">
